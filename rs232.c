@@ -26,7 +26,7 @@
 */
 
 
-/* Last revision: August 5, 2017 */
+/* Last revision: November 22, 2017 */
 
 /* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
 
@@ -309,11 +309,11 @@ int RS232_SendBuf(int comport_number, unsigned char *buf, int size)
     }
     else
     {
-      return 1;
+      return -1;
     }
   }
 
-  return(0);
+  return(n);
 }
 
 
