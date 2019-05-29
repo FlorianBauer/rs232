@@ -2,7 +2,7 @@
 #
 # Author: Teunis van Beelen
 #
-# email: teuniz@gmail.com
+# email: teuniz@protonmail.com
 #
 #
 

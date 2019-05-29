@@ -3,9 +3,9 @@
 *
 * Author: Teunis van Beelen
 *
-* Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017 Teunis van Beelen
+* Copyright (C) 2005 - 2019 Teunis van Beelen
 *
-* Email: teuniz@gmail.com
+* Email: teuniz@protonmail.com
 *
 ***************************************************************************
 *
@@ -26,8 +26,10 @@
 */
 
 
-/* Last revision: November 22, 2017 */
-
+/* Last revision: May 20, 2019 */
+/* Added function to check for status of "RING" */
+/* Added 921600, 1500000, 2000000, 3000000 baud rates for windows */
+/* extended comport range to COM32 for windows */
 /* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
 
 
@@ -368,6 +370,17 @@ int RS232_IsDCDEnabled(int comport_number)
 }
 
 
+int RS232_IsRINGEnabled(int comport_number)
+{
+  int status;
+
+  ioctl(Cport[comport_number], TIOCMGET, &status);
+
+  if(status&TIOCM_RNG) return(1);
+  else return(0);
+}
+
+
 int RS232_IsCTSEnabled(int comport_number)
 {
   int status;
@@ -482,7 +495,7 @@ void RS232_flushRXTX(int comport_number)
 
 #else  /* windows */
 
-#define RS232_PORTNR  16
+#define RS232_PORTNR  32
 
 HANDLE Cport[RS232_PORTNR];
 
@@ -490,7 +503,11 @@ HANDLE Cport[RS232_PORTNR];
 char *comports[RS232_PORTNR]={"\\\\.\\COM1",  "\\\\.\\COM2",  "\\\\.\\COM3",  "\\\\.\\COM4",
                               "\\\\.\\COM5",  "\\\\.\\COM6",  "\\\\.\\COM7",  "\\\\.\\COM8",
                               "\\\\.\\COM9",  "\\\\.\\COM10", "\\\\.\\COM11", "\\\\.\\COM12",
-                              "\\\\.\\COM13", "\\\\.\\COM14", "\\\\.\\COM15", "\\\\.\\COM16"};
+                              "\\\\.\\COM13", "\\\\.\\COM14", "\\\\.\\COM15", "\\\\.\\COM16",
+                              "\\\\.\\COM17", "\\\\.\\COM18", "\\\\.\\COM19", "\\\\.\\COM20",
+                              "\\\\.\\COM21", "\\\\.\\COM22", "\\\\.\\COM23", "\\\\.\\COM24",
+                              "\\\\.\\COM25", "\\\\.\\COM26", "\\\\.\\COM27", "\\\\.\\COM28",
+                              "\\\\.\\COM29", "\\\\.\\COM30", "\\\\.\\COM31", "\\\\.\\COM32"};
 
 char mode_str[128];
 
@@ -533,7 +550,15 @@ int RS232_OpenComport(int comport_number, int baudrate, const char *mode)
                    break;
     case  500000 : strcpy(mode_str, "baud=500000");
                    break;
+    case  921600 : strcpy(mode_str, "baud=921600");
+                   break;
     case 1000000 : strcpy(mode_str, "baud=1000000");
+                   break;
+    case 1500000 : strcpy(mode_str, "baud=1500000");
+                   break;
+    case 2000000 : strcpy(mode_str, "baud=2000000");
+                   break;
+    case 3000000 : strcpy(mode_str, "baud=3000000");
                    break;
     default      : printf("invalid baudrate\n");
                    return(1);
@@ -701,6 +726,17 @@ int RS232_IsDCDEnabled(int comport_number)
   GetCommModemStatus(Cport[comport_number], (LPDWORD)((void *)&status));
 
   if(status&MS_RLSD_ON) return(1);
+  else return(0);
+}
+
+
+int RS232_IsRINGEnabled(int comport_number)
+{
+  int status;
+
+  GetCommModemStatus(Cport[comport_number], (LPDWORD)((void *)&status));
+
+  if(status&MS_RING_ON) return(1);
   else return(0);
 }
 

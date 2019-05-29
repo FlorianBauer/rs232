@@ -3,9 +3,9 @@
 *
 * Author: Teunis van Beelen
 *
-* Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017 Teunis van Beelen
+* Copyright (C) 2005 - 2019 Teunis van Beelen
 *
-* Email: teuniz@gmail.com
+* Email: teuniz@protonmail.com
 *
 ***************************************************************************
 *
@@ -25,7 +25,7 @@
 ***************************************************************************
 */
 
-/* Last revision: August 5, 2017 */
+/* Last revision: May 20, 2019 */
 
 /* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
 
@@ -67,6 +67,7 @@ int RS232_SendBuf(int, unsigned char *, int);
 void RS232_CloseComport(int);
 void RS232_cputs(int, const char *);
 int RS232_IsDCDEnabled(int);
+int RS232_IsRINGEnabled(int);
 int RS232_IsCTSEnabled(int);
 int RS232_IsDSREnabled(int);
 void RS232_enableDTR(int);
