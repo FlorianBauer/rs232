@@ -25,7 +25,7 @@
 ***************************************************************************
 */
 
-/* Last revision: May 20, 2019 */
+/* Last revision: May 31, 2019 */
 
 /* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
 
@@ -60,7 +60,7 @@ extern "C" {
 
 #endif
 
-int RS232_OpenComport(int, int, const char *);
+int RS232_OpenComport(int, int, const char *, int);
 int RS232_PollComport(int, unsigned char *, int);
 int RS232_SendByte(int, unsigned char);
 int RS232_SendBuf(int, unsigned char *, int);

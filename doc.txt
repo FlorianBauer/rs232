@@ -5,16 +5,18 @@ Url:     http://www.teuniz.net/RS-232/
 E-mail:  teuniz@protonmail.com
 License: GPLv3
 
-Last revision: May 20, 2019
+Last revision: May 31, 2019
 
 
 
-int RS232_OpenComport(int comport_number, int baudrate, const char * mode)
+int RS232_OpenComport(int comport_number, int baudrate, const char * mode, int flowctrl)
 
   Opens the comport, comportnumber starts with 0 (see the list of numbers).
   Baudrate is expressed in baud per second i.e 115200 (see the list of possible baudrates).
   Mode is a string in the form of "8N1", "7E2", etc.
   8N1 means eight databits, no parity, one stopbit. If in doubt, use 8N1 (see the list of possible modes).
+  If flowctrl is set to 0, no flow control is used.
+  If flowctrl is set to 1, hardware flow control is enabled using the RTS/CTS lines.
   Returns 1 in case of an error.
   In case the comport is already opened (by another process),
   it will not open the port but raise an error instead.
@@ -70,9 +72,9 @@ void RS232_disableDTR(int comport_number)
 
 void RS232_enableRTS(int comport_number)
 
-  Sets the RTS line high (active state).
+  Sets the RTS line high (active state). Do not use this function if hardware flow control is enabled!
 
-void RS232_disableRTS(int comport_number)
+void RS232_disableRTS(int comport_number) Do not use this function if hardware flow control is enabled!
 
   Sets the RTS line low (non active state).
 

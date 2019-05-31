@@ -26,10 +26,8 @@
 */
 
 
-/* Last revision: May 20, 2019 */
-/* Added function to check for status of "RING" */
-/* Added 921600, 1500000, 2000000, 3000000 baud rates for windows */
-/* extended comport range to COM32 for windows */
+/* Last revision: May 31, 2019 */
+/* Added support for hardware flow control using RTS and CTS lines */
 /* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
 
 
@@ -56,7 +54,7 @@ char *comports[RS232_PORTNR]={"/dev/ttyS0","/dev/ttyS1","/dev/ttyS2","/dev/ttyS3
                        "/dev/cuau0","/dev/cuau1","/dev/cuau2","/dev/cuau3",
                        "/dev/cuaU0","/dev/cuaU1","/dev/cuaU2","/dev/cuaU3"};
 
-int RS232_OpenComport(int comport_number, int baudrate, const char *mode)
+int RS232_OpenComport(int comport_number, int baudrate, const char *mode, int flowctrl)
 {
   int baudr,
       status;
@@ -222,6 +220,10 @@ http://man7.org/linux/man-pages/man3/termios.3.html
   memset(&new_port_settings, 0, sizeof(new_port_settings));  /* clear the new struct */
 
   new_port_settings.c_cflag = cbits | cpar | bstop | CLOCAL | CREAD;
+  if(flowctrl)
+  {
+    new_port_settings.c_cflag |= CRTSCTS;
+  }
   new_port_settings.c_iflag = ipar;
   new_port_settings.c_oflag = 0;
   new_port_settings.c_lflag = 0;
@@ -512,7 +514,7 @@ char *comports[RS232_PORTNR]={"\\\\.\\COM1",  "\\\\.\\COM2",  "\\\\.\\COM3",  "\
 char mode_str[128];
 
 
-int RS232_OpenComport(int comport_number, int baudrate, const char *mode)
+int RS232_OpenComport(int comport_number, int baudrate, const char *mode, int flowctrl)
 {
   if((comport_number>=RS232_PORTNR)||(comport_number<0))
   {
@@ -613,12 +615,21 @@ int RS232_OpenComport(int comport_number, int baudrate, const char *mode)
               break;
   }
 
-  strcat(mode_str, " dtr=on rts=on");
+  if(flowctrl)
+  {
+    strcat(mode_str, " xon=off to=off odsr=off dtr=on rts=off");
+  }
+  else
+  {
+    strcat(mode_str, " xon=off to=off odsr=off dtr=on rts=on");
+  }
 
 /*
 http://msdn.microsoft.com/en-us/library/windows/desktop/aa363145%28v=vs.85%29.aspx
 
 http://technet.microsoft.com/en-us/library/cc732236.aspx
+
+https://docs.microsoft.com/en-us/windows/desktop/api/winbase/ns-winbase-_dcb
 */
 
   Cport[comport_number] = CreateFileA(comports[comport_number],
@@ -644,6 +655,12 @@ http://technet.microsoft.com/en-us/library/cc732236.aspx
     printf("unable to set comport dcb settings\n");
     CloseHandle(Cport[comport_number]);
     return(1);
+  }
+
+  if(flowctrl)
+  {
+    port_settings.fOutxCtsFlow = TRUE;
+    port_settings.fRtsControl = RTS_CONTROL_HANDSHAKE;
   }
 
   if(!SetCommState(Cport[comport_number], &port_settings))
