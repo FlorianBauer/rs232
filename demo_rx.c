@@ -34,7 +34,7 @@ int main()
   char mode[]={'8','N','1',0};
 
 
-  if(RS232_OpenComport(cport_nr, bdrate, mode))
+  if(RS232_OpenComport(cport_nr, bdrate, mode, 0))
   {
     printf("Can not open comport\n");
 
