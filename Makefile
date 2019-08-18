@@ -7,7 +7,7 @@
 #
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Wshadow -Wformat-nonliteral -Wformat-security -Wtype-limits -o2
+CFLAGS = -Wall -Wextra -Wshadow -Wformat-nonliteral -Wformat-security -Wtype-limits -O2
 
 objects = rs232.o
 
