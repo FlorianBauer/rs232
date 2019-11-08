@@ -26,8 +26,8 @@ int main() {
     int n;
     int cPortNr = 0; /* /dev/ttyS0 (COM1 on windows) */
     int bdrate = 9600; /* 9600 baud */
-
-    unsigned char buf[4096];
+    constexpr size_t bufLen = 4096;
+    unsigned char buf[bufLen];
 
     char mode[] = {'8', 'N', '1', 0};
 
@@ -39,7 +39,7 @@ int main() {
     }
 
     while (1) {
-        n = rs232::pollComport(cPortNr, buf, 4095);
+        n = rs232::pollComport(cPortNr, buf, bufLen - 1);
 
         if (n > 0) {
             buf[n] = 0; /* always put a "null" at the end of a string! */

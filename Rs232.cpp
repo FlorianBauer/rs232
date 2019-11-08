@@ -506,7 +506,8 @@ static constexpr const char* const comports[RS232_PORTNR] = {
     /* 31 */ "\\\\.\\COM32",
 };
 
-char modeStr[128];
+constexpr size_t modeStrLen = 128;
+char modeStr[modeStrLen];
 
 int rs232::openComport(int comportNumber, int baudrate, const char *mode, int flowctrl) {
     if ((comportNumber >= RS232_PORTNR) || (comportNumber < 0)) {
@@ -515,62 +516,62 @@ int rs232::openComport(int comportNumber, int baudrate, const char *mode, int fl
     }
 
     switch (baudrate) {
-        case 110: strcpy(modeStr, "baud=110");
+        case 110: strncpy(modeStr, "baud=110", modeStrLen);
             break;
-        case 300: strcpy(modeStr, "baud=300");
+        case 300: strncpy(modeStr, "baud=300", modeStrLen);
             break;
-        case 600: strcpy(modeStr, "baud=600");
+        case 600: strncpy(modeStr, "baud=600", modeStrLen);
             break;
-        case 1200: strcpy(modeStr, "baud=1200");
+        case 1200: strncpy(modeStr, "baud=1200", modeStrLen);
             break;
-        case 2400: strcpy(modeStr, "baud=2400");
+        case 2400: strncpy(modeStr, "baud=2400", modeStrLen);
             break;
-        case 4800: strcpy(modeStr, "baud=4800");
+        case 4800: strncpy(modeStr, "baud=4800", modeStrLen);
             break;
-        case 9600: strcpy(modeStr, "baud=9600");
+        case 9600: strncpy(modeStr, "baud=9600", modeStrLen);
             break;
-        case 19200: strcpy(modeStr, "baud=19200");
+        case 19200: strncpy(modeStr, "baud=19200", modeStrLen);
             break;
-        case 38400: strcpy(modeStr, "baud=38400");
+        case 38400: strncpy(modeStr, "baud=38400", modeStrLen);
             break;
-        case 57600: strcpy(modeStr, "baud=57600");
+        case 57600: strncpy(modeStr, "baud=57600", modeStrLen);
             break;
-        case 115200: strcpy(modeStr, "baud=115200");
+        case 115200: strncpy(modeStr, "baud=115200", modeStrLen);
             break;
-        case 128000: strcpy(modeStr, "baud=128000");
+        case 128000: strncpy(modeStr, "baud=128000", modeStrLen);
             break;
-        case 256000: strcpy(modeStr, "baud=256000");
+        case 256000: strncpy(modeStr, "baud=256000", modeStrLen);
             break;
-        case 500000: strcpy(modeStr, "baud=500000");
+        case 500000: strncpy(modeStr, "baud=500000", modeStrLen);
             break;
-        case 921600: strcpy(modeStr, "baud=921600");
+        case 921600: strncpy(modeStr, "baud=921600", modeStrLen);
             break;
-        case 1000000: strcpy(modeStr, "baud=1000000");
+        case 1000000: strncpy(modeStr, "baud=1000000", modeStrLen);
             break;
-        case 1500000: strcpy(modeStr, "baud=1500000");
+        case 1500000: strncpy(modeStr, "baud=1500000", modeStrLen);
             break;
-        case 2000000: strcpy(modeStr, "baud=2000000");
+        case 2000000: strncpy(modeStr, "baud=2000000", modeStrLen);
             break;
-        case 3000000: strcpy(modeStr, "baud=3000000");
+        case 3000000: strncpy(modeStr, "baud=3000000", modeStrLen);
             break;
         default: printf("invalid baudrate\n");
             return (1);
             break;
     }
 
-    if (strlen(mode) != 3) {
+    if (strnlen(mode, 4) != 3) {
         printf("invalid mode \"%s\"\n", mode);
         return (1);
     }
 
     switch (mode[0]) {
-        case '8': strcat(modeStr, " data=8");
+        case '8': strncat(modeStr, " data=8", 8);
             break;
-        case '7': strcat(modeStr, " data=7");
+        case '7': strncat(modeStr, " data=7", 8);
             break;
-        case '6': strcat(modeStr, " data=6");
+        case '6': strncat(modeStr, " data=6", 8);
             break;
-        case '5': strcat(modeStr, " data=5");
+        case '5': strncat(modeStr, " data=5", 8);
             break;
         default: printf("invalid number of data-bits '%c'\n", mode[0]);
             return (1);
@@ -579,13 +580,13 @@ int rs232::openComport(int comportNumber, int baudrate, const char *mode, int fl
 
     switch (mode[1]) {
         case 'N':
-        case 'n': strcat(modeStr, " parity=n");
+        case 'n': strncat(modeStr, " parity=n", 10);
             break;
         case 'E':
-        case 'e': strcat(modeStr, " parity=e");
+        case 'e': strncat(modeStr, " parity=e", 10);
             break;
         case 'O':
-        case 'o': strcat(modeStr, " parity=o");
+        case 'o': strncat(modeStr, " parity=o", 10);
             break;
         default: printf("invalid parity '%c'\n", mode[1]);
             return (1);
@@ -593,9 +594,9 @@ int rs232::openComport(int comportNumber, int baudrate, const char *mode, int fl
     }
 
     switch (mode[2]) {
-        case '1': strcat(modeStr, " stop=1");
+        case '1': strncat(modeStr, " stop=1", 8);
             break;
-        case '2': strcat(modeStr, " stop=2");
+        case '2': strncat(modeStr, " stop=2", 8);
             break;
         default: printf("invalid number of stop bits '%c'\n", mode[2]);
             return (1);
@@ -603,9 +604,9 @@ int rs232::openComport(int comportNumber, int baudrate, const char *mode, int fl
     }
 
     if (flowctrl) {
-        strcat(modeStr, " xon=off to=off odsr=off dtr=on rts=off");
+        strncat(modeStr, " xon=off to=off odsr=off dtr=on rts=off", 40);
     } else {
-        strcat(modeStr, " xon=off to=off odsr=off dtr=on rts=on");
+        strncat(modeStr, " xon=off to=off odsr=off dtr=on rts=on", 39);
     }
 
     /*
@@ -784,20 +785,20 @@ void rs232::cputs(int comportNumber, const char *text) /* sends a string to seri
 
 /* return index in comports matching to device name or -1 if not found */
 int rs232::getPortNr(const char *devname) {
-    int i;
 
-    char str[32];
+    constexpr size_t strLen = 32;
+    char str[strLen];
 
 #if defined(__linux__) || defined(__FreeBSD__)   /* Linux & FreeBSD */
-    strcpy(str, "/dev/");
+    strncpy(str, "/dev/", strLen);
 #else  /* windows */
-    strcpy(str, "\\\\.\\");
+    strncpy(str, "\\\\.\\", strLen);
 #endif
-    strncat(str, devname, 16);
-    str[31] = 0;
+    strncat(str, devname, strLen);
+    str[strLen - 1] = '\0';
 
-    for (i = 0; i < RS232_PORTNR; i++) {
-        if (!strcmp(comports[i], str)) {
+    for (int i = 0; i < RS232_PORTNR; i++) {
+        if (!strncmp(comports[i], str, strLen)) {
             return i;
         }
     }

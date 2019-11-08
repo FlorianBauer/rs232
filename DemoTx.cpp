@@ -22,27 +22,23 @@ compile with the command: g++ DemoTx.cpp Rs232.cpp -Wall -Wextra -o2 -o TestTx
 #include "Rs232.h"
 
 int main() {
-    int i = 0,
-            cPortNr = 0, /* /dev/ttyS0 (COM1 on windows) */
-            bdrate = 9600; /* 9600 baud */
+    int i = 0;
+    int cPortNr = 0; /* /dev/ttyS0 (COM1 on windows) */
+    int bdrate = 9600; /* 9600 baud */
+    char mode[] = {'8', 'N', '1', 0};
+    constexpr size_t strLen = 512;
+    char str[2][strLen];
 
-    char mode[] = {'8', 'N', '1', 0},
-    str[2][512];
-
-
-    strcpy(str[0], "The quick brown fox jumped over the lazy grey dog.\n");
-
-    strcpy(str[1], "Happy serial programming!\n");
+    strncpy(str[0], "The quick brown fox jumped over the lazy grey dog.\n", strLen);
+    strncpy(str[1], "Happy serial programming!\n", strLen);
 
     if (rs232::openComport(cPortNr, bdrate, mode, 0)) {
         printf("Can not open comport\n");
-
         return (0);
     }
 
     while (1) {
         rs232::cputs(cPortNr, str[i]);
-
         printf("sent: %s\n", str[i]);
 
 #ifdef _WIN32
@@ -52,7 +48,6 @@ int main() {
 #endif
 
         i++;
-
         i %= 2;
     }
 
