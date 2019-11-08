@@ -6,7 +6,7 @@ purpose: simple demo that transmits characters to
 the serial port and print them on the screen,
 exit the program by pressing Ctrl-C
 
-compile with the command: gcc DemoTx.cpp Rs232.cpp -Wall -Wextra -o2 -o test_tx
+compile with the command: g++ DemoTx.cpp Rs232.cpp -Wall -Wextra -o2 -o TestTx
 
  **************************************************/
 
@@ -34,14 +34,14 @@ int main() {
 
     strcpy(str[1], "Happy serial programming!\n");
 
-    if (RS232_OpenComport(cport_nr, bdrate, mode, 0)) {
+    if (rs232::OpenComport(cport_nr, bdrate, mode, 0)) {
         printf("Can not open comport\n");
 
         return (0);
     }
 
     while (1) {
-        RS232_cputs(cport_nr, str[i]);
+        rs232::cputs(cport_nr, str[i]);
 
         printf("sent: %s\n", str[i]);
 

@@ -54,7 +54,7 @@ char *comports[RS232_PORTNR] = {"/dev/ttyS0", "/dev/ttyS1", "/dev/ttyS2", "/dev/
     "/dev/cuau0", "/dev/cuau1", "/dev/cuau2", "/dev/cuau3",
     "/dev/cuaU0", "/dev/cuaU1", "/dev/cuaU2", "/dev/cuaU3"};
 
-int RS232_OpenComport(int comport_number, int baudrate, const char *mode, int flowctrl) {
+int rs232::OpenComport(int comport_number, int baudrate, const char *mode, int flowctrl) {
     int baudr,
             status;
 
@@ -253,7 +253,7 @@ int RS232_OpenComport(int comport_number, int baudrate, const char *mode, int fl
     return (0);
 }
 
-int RS232_PollComport(int comport_number, unsigned char *buf, int size) {
+int rs232::PollComport(int comport_number, unsigned char *buf, int size) {
     int n;
 
     n = read(Cport[comport_number], buf, size);
@@ -265,7 +265,7 @@ int RS232_PollComport(int comport_number, unsigned char *buf, int size) {
     return (n);
 }
 
-int RS232_SendByte(int comport_number, unsigned char byte) {
+int rs232::SendByte(int comport_number, unsigned char byte) {
     int n = write(Cport[comport_number], &byte, 1);
     if (n < 0) {
         if (errno == EAGAIN) {
@@ -278,7 +278,7 @@ int RS232_SendByte(int comport_number, unsigned char byte) {
     return (0);
 }
 
-int RS232_SendBuf(int comport_number, unsigned char *buf, int size) {
+int rs232::SendBuf(int comport_number, unsigned char *buf, int size) {
     int n = write(Cport[comport_number], buf, size);
     if (n < 0) {
         if (errno == EAGAIN) {
@@ -291,7 +291,7 @@ int RS232_SendBuf(int comport_number, unsigned char *buf, int size) {
     return (n);
 }
 
-void RS232_CloseComport(int comport_number) {
+void rs232::CloseComport(int comport_number) {
     int status;
 
     if (ioctl(Cport[comport_number], TIOCMGET, &status) == -1) {
@@ -328,7 +328,7 @@ TIOCM_DSR       DSR (data set ready)
 http://man7.org/linux/man-pages/man4/tty_ioctl.4.html
  */
 
-int RS232_IsDCDEnabled(int comport_number) {
+int rs232::IsDCDEnabled(int comport_number) {
     int status;
 
     ioctl(Cport[comport_number], TIOCMGET, &status);
@@ -337,7 +337,7 @@ int RS232_IsDCDEnabled(int comport_number) {
     else return (0);
 }
 
-int RS232_IsRINGEnabled(int comport_number) {
+int rs232::IsRINGEnabled(int comport_number) {
     int status;
 
     ioctl(Cport[comport_number], TIOCMGET, &status);
@@ -346,7 +346,7 @@ int RS232_IsRINGEnabled(int comport_number) {
     else return (0);
 }
 
-int RS232_IsCTSEnabled(int comport_number) {
+int rs232::IsCTSEnabled(int comport_number) {
     int status;
 
     ioctl(Cport[comport_number], TIOCMGET, &status);
@@ -355,7 +355,7 @@ int RS232_IsCTSEnabled(int comport_number) {
     else return (0);
 }
 
-int RS232_IsDSREnabled(int comport_number) {
+int rs232::IsDSREnabled(int comport_number) {
     int status;
 
     ioctl(Cport[comport_number], TIOCMGET, &status);
@@ -364,7 +364,7 @@ int RS232_IsDSREnabled(int comport_number) {
     else return (0);
 }
 
-void RS232_enableDTR(int comport_number) {
+void rs232::enableDTR(int comport_number) {
     int status;
 
     if (ioctl(Cport[comport_number], TIOCMGET, &status) == -1) {
@@ -378,7 +378,7 @@ void RS232_enableDTR(int comport_number) {
     }
 }
 
-void RS232_disableDTR(int comport_number) {
+void rs232::disableDTR(int comport_number) {
     int status;
 
     if (ioctl(Cport[comport_number], TIOCMGET, &status) == -1) {
@@ -392,7 +392,7 @@ void RS232_disableDTR(int comport_number) {
     }
 }
 
-void RS232_enableRTS(int comport_number) {
+void rs232::enableRTS(int comport_number) {
     int status;
 
     if (ioctl(Cport[comport_number], TIOCMGET, &status) == -1) {
@@ -406,7 +406,7 @@ void RS232_enableRTS(int comport_number) {
     }
 }
 
-void RS232_disableRTS(int comport_number) {
+void rs232::disableRTS(int comport_number) {
     int status;
 
     if (ioctl(Cport[comport_number], TIOCMGET, &status) == -1) {
@@ -420,15 +420,15 @@ void RS232_disableRTS(int comport_number) {
     }
 }
 
-void RS232_flushRX(int comport_number) {
+void rs232::flushRX(int comport_number) {
     tcflush(Cport[comport_number], TCIFLUSH);
 }
 
-void RS232_flushTX(int comport_number) {
+void rs232::flushTX(int comport_number) {
     tcflush(Cport[comport_number], TCOFLUSH);
 }
 
-void RS232_flushRXTX(int comport_number) {
+void rs232::flushRXTX(int comport_number) {
     tcflush(Cport[comport_number], TCIOFLUSH);
 }
 
@@ -451,7 +451,7 @@ char *comports[RS232_PORTNR] = {"\\\\.\\COM1", "\\\\.\\COM2", "\\\\.\\COM3", "\\
 
 char mode_str[128];
 
-int RS232_OpenComport(int comport_number, int baudrate, const char *mode, int flowctrl) {
+int rs232::OpenComport(int comport_number, int baudrate, const char *mode, int flowctrl) {
     if ((comport_number >= RS232_PORTNR) || (comport_number < 0)) {
         printf("illegal comport number\n");
         return (1);
@@ -610,7 +610,7 @@ int RS232_OpenComport(int comport_number, int baudrate, const char *mode, int fl
     return (0);
 }
 
-int RS232_PollComport(int comport_number, unsigned char *buf, int size) {
+int rs232::PollComport(int comport_number, unsigned char *buf, int size) {
     int n;
 
     /* added the void pointer cast, otherwise gcc will complain about */
@@ -621,7 +621,7 @@ int RS232_PollComport(int comport_number, unsigned char *buf, int size) {
     return (n);
 }
 
-int RS232_SendByte(int comport_number, unsigned char byte) {
+int rs232::SendByte(int comport_number, unsigned char byte) {
     int n;
 
     WriteFile(Cport[comport_number], &byte, 1, (LPDWORD) ((void *) &n), NULL);
@@ -631,7 +631,7 @@ int RS232_SendByte(int comport_number, unsigned char byte) {
     return (0);
 }
 
-int RS232_SendBuf(int comport_number, unsigned char *buf, int size) {
+int rs232::SendBuf(int comport_number, unsigned char *buf, int size) {
     int n;
 
     if (WriteFile(Cport[comport_number], buf, size, (LPDWORD) ((void *) &n), NULL)) {
@@ -641,7 +641,7 @@ int RS232_SendBuf(int comport_number, unsigned char *buf, int size) {
     return (-1);
 }
 
-void RS232_CloseComport(int comport_number) {
+void rs232::CloseComport(int comport_number) {
     CloseHandle(Cport[comport_number]);
 }
 
@@ -649,7 +649,7 @@ void RS232_CloseComport(int comport_number) {
 http://msdn.microsoft.com/en-us/library/windows/desktop/aa363258%28v=vs.85%29.aspx
  */
 
-int RS232_IsDCDEnabled(int comport_number) {
+int rs232::IsDCDEnabled(int comport_number) {
     int status;
 
     GetCommModemStatus(Cport[comport_number], (LPDWORD) ((void *) &status));
@@ -658,7 +658,7 @@ int RS232_IsDCDEnabled(int comport_number) {
     else return (0);
 }
 
-int RS232_IsRINGEnabled(int comport_number) {
+int rs232::IsRINGEnabled(int comport_number) {
     int status;
 
     GetCommModemStatus(Cport[comport_number], (LPDWORD) ((void *) &status));
@@ -667,7 +667,7 @@ int RS232_IsRINGEnabled(int comport_number) {
     else return (0);
 }
 
-int RS232_IsCTSEnabled(int comport_number) {
+int rs232::IsCTSEnabled(int comport_number) {
     int status;
 
     GetCommModemStatus(Cport[comport_number], (LPDWORD) ((void *) &status));
@@ -676,7 +676,7 @@ int RS232_IsCTSEnabled(int comport_number) {
     else return (0);
 }
 
-int RS232_IsDSREnabled(int comport_number) {
+int rs232::IsDSREnabled(int comport_number) {
     int status;
 
     GetCommModemStatus(Cport[comport_number], (LPDWORD) ((void *) &status));
@@ -685,19 +685,19 @@ int RS232_IsDSREnabled(int comport_number) {
     else return (0);
 }
 
-void RS232_enableDTR(int comport_number) {
+void rs232::enableDTR(int comport_number) {
     EscapeCommFunction(Cport[comport_number], SETDTR);
 }
 
-void RS232_disableDTR(int comport_number) {
+void rs232::disableDTR(int comport_number) {
     EscapeCommFunction(Cport[comport_number], CLRDTR);
 }
 
-void RS232_enableRTS(int comport_number) {
+void rs232::enableRTS(int comport_number) {
     EscapeCommFunction(Cport[comport_number], SETRTS);
 }
 
-void RS232_disableRTS(int comport_number) {
+void rs232::disableRTS(int comport_number) {
     EscapeCommFunction(Cport[comport_number], CLRRTS);
 }
 
@@ -705,15 +705,15 @@ void RS232_disableRTS(int comport_number) {
 https://msdn.microsoft.com/en-us/library/windows/desktop/aa363428%28v=vs.85%29.aspx
  */
 
-void RS232_flushRX(int comport_number) {
+void rs232::flushRX(int comport_number) {
     PurgeComm(Cport[comport_number], PURGE_RXCLEAR | PURGE_RXABORT);
 }
 
-void RS232_flushTX(int comport_number) {
+void rs232::flushTX(int comport_number) {
     PurgeComm(Cport[comport_number], PURGE_TXCLEAR | PURGE_TXABORT);
 }
 
-void RS232_flushRXTX(int comport_number) {
+void rs232::flushRXTX(int comport_number) {
     PurgeComm(Cport[comport_number], PURGE_RXCLEAR | PURGE_RXABORT);
     PurgeComm(Cport[comport_number], PURGE_TXCLEAR | PURGE_TXABORT);
 }
@@ -721,12 +721,12 @@ void RS232_flushRXTX(int comport_number) {
 
 #endif
 
-void RS232_cputs(int comport_number, const char *text) /* sends a string to serial port */ {
-    while (*text != 0) RS232_SendByte(comport_number, *(text++));
+void rs232::cputs(int comport_number, const char *text) /* sends a string to serial port */ {
+    while (*text != 0) rs232::SendByte(comport_number, *(text++));
 }
 
 /* return index in comports matching to device name or -1 if not found */
-int RS232_GetPortnr(const char *devname) {
+int rs232::GetPortnr(const char *devname) {
     int i;
 
     char str[32];

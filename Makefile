@@ -6,37 +6,27 @@
 #
 #
 
-CC = gcc
+CC = g++
 CFLAGS = -Wall -Wextra -Wshadow -Wformat-nonliteral -Wformat-security -Wtype-limits -O2
 
-objects = rs232.o
+objects = Rs232.o
 
-all: test_rx test_tx
+all: TestRx TestTx
 
-test_rx : $(objects) demo_rx.o
-	$(CC) $(objects) demo_rx.o -o test_rx
+TestRx : $(objects) DemoRx.o
+	$(CC) $(objects) DemoRx.o -o TestRx
 
-test_tx : $(objects) demo_tx.o
-	$(CC) $(objects) demo_tx.o -o test_tx
+TestTx : $(objects) DemoTx.o
+	$(CC) $(objects) DemoTx.o -o TestTx
 
-demo_rx.o : demo_rx.c rs232.h
-	$(CC) $(CFLAGS) -c demo_rx.c -o demo_rx.o
+DemoRx.o : DemoRx.cpp Rs232.h
+	$(CC) $(CFLAGS) -c DemoRx.cpp -o DemoRx.o
 
-demo_tx.o : demo_tx.c rs232.h
-	$(CC) $(CFLAGS) -c demo_tx.c -o demo_tx.o
+DemoTx.o : DemoTx.cpp Rs232.h
+	$(CC) $(CFLAGS) -c DemoTx.cpp -o DemoTx.o
 
-rs232.o : rs232.h rs232.c
-	$(CC) $(CFLAGS) -c rs232.c -o rs232.o
+Rs232.o : Rs232.h Rs232.cpp
+	$(CC) $(CFLAGS) -c Rs232.cpp -o Rs232.o
 
 clean :
-	$(RM) test_rx test_tx $(objects) demo_rx.o demo_tx.o rs232.o
-
-#
-#
-#
-#
-
-
-
-
-
+	$(RM) TestRx TestTx $(objects) DemoRx.o DemoTx.o Rs232.o

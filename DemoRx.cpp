@@ -6,7 +6,7 @@ purpose: simple demo that receives characters from
 the serial port and print them on the screen,
 exit the program by pressing Ctrl-C
 
-compile with the command: gcc DemoRx.cpp Rs232.cpp -Wall -Wextra -o2 -o test_rx
+compile with the command: g++ DemoRx.cpp Rs232.cpp -Wall -Wextra -o2 -o TestRx
 
  **************************************************/
 
@@ -31,14 +31,14 @@ int main() {
     char mode[] = {'8', 'N', '1', 0};
 
 
-    if (RS232_OpenComport(cport_nr, bdrate, mode, 0)) {
+    if (rs232::OpenComport(cport_nr, bdrate, mode, 0)) {
         printf("Can not open comport\n");
 
         return (0);
     }
 
     while (1) {
-        n = RS232_PollComport(cport_nr, buf, 4095);
+        n = rs232::PollComport(cport_nr, buf, 4095);
 
         if (n > 0) {
             buf[n] = 0; /* always put a "null" at the end of a string! */
