@@ -59,7 +59,7 @@
 #if defined(__linux__) || defined(__FreeBSD__)
 
 static constexpr int RS232_PORTNR = 38;
-static constexpr const char* const comports[RS232_PORTNR] = {
+static constexpr const char* const comports[] = {
     /* 00 */ "/dev/ttyS0",
     /* 01 */ "/dev/ttyS1",
     /* 02 */ "/dev/ttyS2",
@@ -103,7 +103,7 @@ static constexpr const char* const comports[RS232_PORTNR] = {
 #else // windows
 
 static constexpr int RS232_PORTNR = 32;
-static constexpr const char* const comports[RS232_PORTNR] = {
+static constexpr const char* const comports[] = {
     /* 00 */ "\\\\.\\COM1",
     /* 01 */ "\\\\.\\COM2",
     /* 02 */ "\\\\.\\COM3",
@@ -139,6 +139,9 @@ static constexpr const char* const comports[RS232_PORTNR] = {
 };
 
 #endif
+
+static_assert(RS232_PORTNR == (sizeof(comports) / sizeof(comports[0])),
+        "Max port-number does not match port-entry count!");
 
 namespace rs232 {
     int openComport(int, int, const char*, int);
