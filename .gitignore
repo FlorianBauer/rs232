@@ -1,7 +1,8 @@
 #
 *
 #
-!*.[ch]
+!*.cpp
+!*.h
 #
 !.gitignore
 #
@@ -9,6 +10,8 @@
 !doc.txt
 !howto_compile.txt
 !LICENSE
+!AUTHORS
+!CMakeLists.txt
 !Makefile
 !README.md
 #

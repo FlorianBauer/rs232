@@ -31,7 +31,7 @@
 /* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
 
 
-#include "rs232.h"
+#include "Rs232.h"
 
 
 #if defined(__linux__) || defined(__FreeBSD__)   /* Linux & FreeBSD */

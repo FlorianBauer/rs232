@@ -1,12 +1,12 @@
 
 /**************************************************
 
-file: demo_tx.c
+file: DemoTx.cpp
 purpose: simple demo that transmits characters to
 the serial port and print them on the screen,
 exit the program by pressing Ctrl-C
 
-compile with the command: gcc demo_tx.c rs232.c -Wall -Wextra -o2 -o test_tx
+compile with the command: gcc DemoTx.cpp Rs232.cpp -Wall -Wextra -o2 -o test_tx
 
 **************************************************/
 
@@ -19,7 +19,7 @@ compile with the command: gcc demo_tx.c rs232.c -Wall -Wextra -o2 -o test_tx
 #include <unistd.h>
 #endif
 
-#include "rs232.h"
+#include "Rs232.h"
 
 
 
