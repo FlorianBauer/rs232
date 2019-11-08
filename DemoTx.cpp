@@ -23,7 +23,7 @@ compile with the command: g++ DemoTx.cpp Rs232.cpp -Wall -Wextra -o2 -o TestTx
 
 int main() {
     int i = 0,
-            cport_nr = 0, /* /dev/ttyS0 (COM1 on windows) */
+            cPortNr = 0, /* /dev/ttyS0 (COM1 on windows) */
             bdrate = 9600; /* 9600 baud */
 
     char mode[] = {'8', 'N', '1', 0},
@@ -34,14 +34,14 @@ int main() {
 
     strcpy(str[1], "Happy serial programming!\n");
 
-    if (rs232::OpenComport(cport_nr, bdrate, mode, 0)) {
+    if (rs232::openComport(cPortNr, bdrate, mode, 0)) {
         printf("Can not open comport\n");
 
         return (0);
     }
 
     while (1) {
-        rs232::cputs(cport_nr, str[i]);
+        rs232::cputs(cPortNr, str[i]);
 
         printf("sent: %s\n", str[i]);
 

@@ -55,24 +55,24 @@
 #endif
 
 namespace rs232 {
-    int OpenComport(int, int, const char*, int);
-    int PollComport(int, unsigned char*, int);
-    int SendByte(int, unsigned char);
-    int SendBuf(int, unsigned char*, int);
-    void CloseComport(int);
+    int openComport(int, int, const char*, int);
+    int pollComport(int, unsigned char*, int);
+    int sendByte(int, unsigned char);
+    int sendBuf(int, unsigned char*, int);
+    void closeComport(int);
     void cputs(int, const char*);
-    int IsDCDEnabled(int);
-    int IsRINGEnabled(int);
-    int IsCTSEnabled(int);
-    int IsDSREnabled(int);
-    void enableDTR(int);
-    void disableDTR(int);
-    void enableRTS(int);
-    void disableRTS(int);
-    void flushRX(int);
-    void flushTX(int);
-    void flushRXTX(int);
-    int GetPortnr(const char*);
+    int isDcdEnabled(int);
+    int isRingEnabled(int);
+    int isCtsEnabled(int);
+    int isDsrEnabled(int);
+    void enableDtr(int);
+    void disableDtr(int);
+    void enableRts(int);
+    void disableRts(int);
+    void flushRx(int);
+    void flushTx(int);
+    void flushRxTx(int);
+    int getPortNr(const char*);
 }
 
 #endif

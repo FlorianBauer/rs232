@@ -22,23 +22,24 @@ compile with the command: g++ DemoRx.cpp Rs232.cpp -Wall -Wextra -o2 -o TestRx
 #include "Rs232.h"
 
 int main() {
-    int i, n,
-            cport_nr = 0, /* /dev/ttyS0 (COM1 on windows) */
-            bdrate = 9600; /* 9600 baud */
+    int i;
+    int n;
+    int cPortNr = 0; /* /dev/ttyS0 (COM1 on windows) */
+    int bdrate = 9600; /* 9600 baud */
 
     unsigned char buf[4096];
 
     char mode[] = {'8', 'N', '1', 0};
 
 
-    if (rs232::OpenComport(cport_nr, bdrate, mode, 0)) {
+    if (rs232::openComport(cPortNr, bdrate, mode, 0)) {
         printf("Can not open comport\n");
 
         return (0);
     }
 
     while (1) {
-        n = rs232::PollComport(cport_nr, buf, 4095);
+        n = rs232::pollComport(cPortNr, buf, 4095);
 
         if (n > 0) {
             buf[n] = 0; /* always put a "null" at the end of a string! */
