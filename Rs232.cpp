@@ -37,10 +37,7 @@
 
 
 constexpr int RS232_PORTNR = 38;
-
 int cPort[RS232_PORTNR];
-int error;
-
 struct termios newPortSettings;
 struct termios oldPortSettings[RS232_PORTNR];
 
@@ -88,6 +85,7 @@ static constexpr const char* const comports[RS232_PORTNR] = {
 int rs232::openComport(int comportNumber, int baudrate, const char *mode, int flowctrl) {
     int baudr;
     int status;
+    int error;
 
     if ((comportNumber >= RS232_PORTNR) || (comportNumber < 0)) {
         printf("illegal comport number\n");
