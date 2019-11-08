@@ -8,7 +8,7 @@ exit the program by pressing Ctrl-C
 
 compile with the command: gcc DemoTx.cpp Rs232.cpp -Wall -Wextra -o2 -o test_tx
 
-**************************************************/
+ **************************************************/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,46 +21,40 @@ compile with the command: gcc DemoTx.cpp Rs232.cpp -Wall -Wextra -o2 -o test_tx
 
 #include "Rs232.h"
 
+int main() {
+    int i = 0,
+            cport_nr = 0, /* /dev/ttyS0 (COM1 on windows) */
+            bdrate = 9600; /* 9600 baud */
+
+    char mode[] = {'8', 'N', '1', 0},
+    str[2][512];
 
 
-int main()
-{
-  int i=0,
-      cport_nr=0,        /* /dev/ttyS0 (COM1 on windows) */
-      bdrate=9600;       /* 9600 baud */
+    strcpy(str[0], "The quick brown fox jumped over the lazy grey dog.\n");
 
-  char mode[]={'8','N','1',0},
-       str[2][512];
+    strcpy(str[1], "Happy serial programming!\n");
 
+    if (RS232_OpenComport(cport_nr, bdrate, mode, 0)) {
+        printf("Can not open comport\n");
 
-  strcpy(str[0], "The quick brown fox jumped over the lazy grey dog.\n");
+        return (0);
+    }
 
-  strcpy(str[1], "Happy serial programming!\n");
+    while (1) {
+        RS232_cputs(cport_nr, str[i]);
 
-  if(RS232_OpenComport(cport_nr, bdrate, mode, 0))
-  {
-    printf("Can not open comport\n");
-
-    return(0);
-  }
-
-  while(1)
-  {
-    RS232_cputs(cport_nr, str[i]);
-
-    printf("sent: %s\n", str[i]);
+        printf("sent: %s\n", str[i]);
 
 #ifdef _WIN32
-    Sleep(1000);
+        Sleep(1000);
 #else
-    usleep(1000000);  /* sleep for 1 Second */
+        usleep(1000000); /* sleep for 1 Second */
 #endif
 
-    i++;
+        i++;
 
-    i %= 2;
-  }
+        i %= 2;
+    }
 
-  return(0);
+    return (0);
 }
-
