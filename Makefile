@@ -7,7 +7,7 @@
 #
 
 CC = g++
-CFLAGS = -Wall -Wextra -Wshadow -Wformat-nonliteral -Wformat-security -Wtype-limits -O2
+CFLAGS = -std=c++11 -Wall -Wextra -Wshadow -Wformat-nonliteral -Wformat-security -Wtype-limits -O2
 
 objects = Rs232.o
 

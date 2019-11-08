@@ -6,7 +6,7 @@ purpose: simple demo that transmits characters to
 the serial port and print them on the screen,
 exit the program by pressing Ctrl-C
 
-compile with the command: g++ DemoTx.cpp Rs232.cpp -Wall -Wextra -o2 -o TestTx
+compile with the command: g++ -std=c++11 DemoTx.cpp Rs232.cpp -Wall -Wextra -O2 -o TestTx
 
  **************************************************/
 
