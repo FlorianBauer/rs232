@@ -35,6 +35,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 
 #if defined(__linux__) || defined(__FreeBSD__)
 
@@ -141,9 +142,9 @@ static constexpr const char* const comports[RS232_PORTNR] = {
 
 namespace rs232 {
     int openComport(int, int, const char*, int);
-    int pollComport(int, unsigned char*, int);
-    int sendByte(int, unsigned char);
-    int sendBuf(int, unsigned char*, int);
+    int pollComport(int, uint8_t*, size_t);
+    int sendByte(int, const uint8_t);
+    int sendBuf(int, const uint8_t*, size_t);
     void closeComport(int);
     void cputs(int, const char*);
     int isDcdEnabled(int);

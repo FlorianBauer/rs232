@@ -40,7 +40,7 @@ int cPort[RS232_PORTNR];
 struct termios newPortSettings;
 struct termios oldPortSettings[RS232_PORTNR];
 
-int rs232::openComport(int comportNumber, int baudrate, const char *mode, int flowctrl) {
+int rs232::openComport(int comportNumber, int baudrate, const char* mode, int flowctrl) {
     int baudr;
     int status;
     int error;
@@ -240,11 +240,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char *mode, int fl
     return (0);
 }
 
-int rs232::pollComport(int comportNumber, unsigned char *buf, int size) {
-    int n;
-
-    n = read(cPort[comportNumber], buf, size);
-
+int rs232::pollComport(int comportNumber, uint8_t* buf, size_t size) {
+    int n = read(cPort[comportNumber], buf, size);
     if (n < 0) {
         if (errno == EAGAIN) return 0;
     }
@@ -252,7 +249,7 @@ int rs232::pollComport(int comportNumber, unsigned char *buf, int size) {
     return (n);
 }
 
-int rs232::sendByte(int comportNumber, unsigned char byte) {
+int rs232::sendByte(int comportNumber, const uint8_t byte) {
     int n = write(cPort[comportNumber], &byte, 1);
     if (n < 0) {
         if (errno == EAGAIN) {
@@ -265,7 +262,7 @@ int rs232::sendByte(int comportNumber, unsigned char byte) {
     return (0);
 }
 
-int rs232::sendBuf(int comportNumber, unsigned char *buf, int size) {
+int rs232::sendBuf(int comportNumber, const uint8_t* buf, size_t size) {
     int n = write(cPort[comportNumber], buf, size);
     if (n < 0) {
         if (errno == EAGAIN) {
@@ -426,7 +423,7 @@ HANDLE cPort[RS232_PORTNR];
 constexpr size_t modeStrLen = 128;
 char modeStr[modeStrLen];
 
-int rs232::openComport(int comportNumber, int baudrate, const char *mode, int flowctrl) {
+int rs232::openComport(int comportNumber, int baudrate, const char* mode, int flowctrl) {
     if ((comportNumber >= RS232_PORTNR) || (comportNumber < 0)) {
         printf("illegal comport number\n");
         return (1);
@@ -585,7 +582,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char *mode, int fl
     return (0);
 }
 
-int rs232::pollComport(int comportNumber, unsigned char *buf, int size) {
+int rs232::pollComport(int comportNumber, uint8_t* buf, size_t size) {
     int n;
 
     /* added the void pointer cast, otherwise gcc will complain about */
@@ -596,7 +593,7 @@ int rs232::pollComport(int comportNumber, unsigned char *buf, int size) {
     return (n);
 }
 
-int rs232::sendByte(int comportNumber, unsigned char byte) {
+int rs232::sendByte(int comportNumber, uint8_t byte) {
     int n;
 
     WriteFile(cPort[comportNumber], &byte, 1, (LPDWORD) ((void *) &n), NULL);
@@ -606,7 +603,7 @@ int rs232::sendByte(int comportNumber, unsigned char byte) {
     return (0);
 }
 
-int rs232::sendBuf(int comportNumber, unsigned char *buf, int size) {
+int rs232::sendBuf(int comportNumber, const unsigned* buf, int size) {
     int n;
 
     if (WriteFile(cPort[comportNumber], buf, size, (LPDWORD) ((void *) &n), NULL)) {
@@ -696,12 +693,12 @@ void rs232::flushRxTx(int comportNumber) {
 
 #endif
 
-void rs232::cputs(int comportNumber, const char *text) /* sends a string to serial port */ {
+void rs232::cputs(int comportNumber, const char* text) /* sends a string to serial port */ {
     while (*text != 0) rs232::sendByte(comportNumber, *(text++));
 }
 
 /* return index in comports matching to device name or -1 if not found */
-int rs232::getPortNr(const char *devname) {
+int rs232::getPortNr(const char* devname) {
 
     constexpr size_t strLen = 32;
     char str[strLen];
