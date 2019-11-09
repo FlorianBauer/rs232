@@ -33,28 +33,7 @@
 #ifndef rs232_INCLUDED
 #define rs232_INCLUDED
 
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-
-#if defined(__linux__) || defined(__FreeBSD__)
-
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <limits.h>
-#include <sys/file.h>
-#include <errno.h>
-
-#else
-
-#include <windows.h>
-
-#endif
-
+#include <cstdint>
 
 #if defined(__linux__) || defined(__FreeBSD__)
 
@@ -140,7 +119,7 @@ static constexpr const char* const comports[] = {
 
 #endif
 
-static_assert(RS232_PORTNR == (sizeof(comports) / sizeof(comports[0])),
+static_assert(RS232_PORTNR == (sizeof (comports) / sizeof (comports[0])),
         "Max port-number does not match port-entry count!");
 
 namespace rs232 {

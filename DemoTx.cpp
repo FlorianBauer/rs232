@@ -12,6 +12,7 @@ compile with the command: g++ -std=c++11 DemoTx.cpp Rs232.cpp -Wall -Wextra -O2 
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #ifdef _WIN32
 #include <Windows.h>
