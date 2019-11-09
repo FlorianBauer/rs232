@@ -1,16 +1,45 @@
-#
-*
-#
+# Ignore all files in root dir with a prefix
+/*.*
+
+# Files in the root dir which are not to ignore
+!.gitignore
+!.gitmodules
+!*.c
 !*.cpp
 !*.h
-#
-!.gitignore
-#
-!doc.txt
-!howto_compile.txt
-!LICENSE
-!AUTHORS
+!*.hpp
+!*.md
 !CMakeLists.txt
-!Makefile
-!README.md
-#
+
+# Executables
+*.exe
+test_rx
+test_tx
+
+# Temporary and core files
+~*
+core
+
+# NetBeans project directories and files
+/dist/
+/private/
+/nbproject/
+
+# CMake generated directories and files
+/CMakeFiles/
+/[Tt]esting/
+/[Bb]uild/
+/[Dd]ebug/
+/[Rr]elease/
+
+# Visual Studio project directories and files
+/.vs/
+/out/
+
+# Doxygen generated documentation files
+/doc/html/
+/doc/latex/
+/doc/docbook/
+/doc/xml/
+/doc/man/
+/doc/rtf/
