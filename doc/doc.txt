@@ -35,7 +35,7 @@ int RS232_PollComport(int comport_number, unsigned char *buf, int size)
 
 int RS232_SendByte(int comport_number, unsigned char byte)
 
-  Sends a byte via the serial port. Returns 1 in case of an error.
+  Sends a byte via the serial port. Returns -1 in case of an error.
 
 int RS232_SendBuf(int comport_number, unsigned char *buf, int size)
 

@@ -150,10 +150,10 @@ namespace rs232 {
     int sendBuf(int, const uint8_t*, size_t);
     void closeComport(int);
     void cputs(int, const char*);
-    int isDcdEnabled(int);
-    int isRingEnabled(int);
-    int isCtsEnabled(int);
-    int isDsrEnabled(int);
+    bool isDcdEnabled(int);
+    bool isRingEnabled(int);
+    bool isCtsEnabled(int);
+    bool isDsrEnabled(int);
     void enableDtr(int);
     void disableDtr(int);
     void enableRts(int);

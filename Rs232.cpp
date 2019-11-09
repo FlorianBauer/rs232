@@ -142,15 +142,18 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
 
     switch (mode[1]) {
         case 'N':
-        case 'n': cpar = 0;
+        case 'n':
+            cpar = 0;
             ipar = IGNPAR;
             break;
         case 'E':
-        case 'e': cpar = PARENB;
+        case 'e':
+            cpar = PARENB;
             ipar = INPCK;
             break;
         case 'O':
-        case 'o': cpar = (PARENB | PARODD);
+        case 'o':
+            cpar = (PARENB | PARODD);
             ipar = INPCK;
             break;
         default: printf("invalid parity '%c'\n", mode[1]);
@@ -243,7 +246,9 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
 int rs232::pollComport(int comportNumber, uint8_t* buf, size_t size) {
     int n = read(cPort[comportNumber], buf, size);
     if (n < 0) {
-        if (errno == EAGAIN) return 0;
+        if (errno == EAGAIN) {
+            return 0;
+        }
     }
 
     return (n);
@@ -252,10 +257,8 @@ int rs232::pollComport(int comportNumber, uint8_t* buf, size_t size) {
 int rs232::sendByte(int comportNumber, const uint8_t byte) {
     int n = write(cPort[comportNumber], &byte, 1);
     if (n < 0) {
-        if (errno == EAGAIN) {
-            return 0;
-        } else {
-            return 1;
+        if (errno != EAGAIN) {
+            return -1;
         }
     }
 
@@ -312,40 +315,28 @@ TIOCM_DSR       DSR (data set ready)
 http://man7.org/linux/man-pages/man4/tty_ioctl.4.html
  */
 
-int rs232::isDcdEnabled(int comportNumber) {
+bool rs232::isDcdEnabled(int comportNumber) {
     int status;
-
     ioctl(cPort[comportNumber], TIOCMGET, &status);
-
-    if (status & TIOCM_CAR) return (1);
-    else return (0);
+    return (status & TIOCM_CAR);
 }
 
-int rs232::isRingEnabled(int comportNumber) {
+bool rs232::isRingEnabled(int comportNumber) {
     int status;
-
     ioctl(cPort[comportNumber], TIOCMGET, &status);
-
-    if (status & TIOCM_RNG) return (1);
-    else return (0);
+    return (status & TIOCM_RNG);
 }
 
-int rs232::isCtsEnabled(int comportNumber) {
+bool rs232::isCtsEnabled(int comportNumber) {
     int status;
-
     ioctl(cPort[comportNumber], TIOCMGET, &status);
-
-    if (status & TIOCM_CTS) return (1);
-    else return (0);
+    return (status & TIOCM_CTS);
 }
 
-int rs232::isDsrEnabled(int comportNumber) {
+bool rs232::isDsrEnabled(int comportNumber) {
     int status;
-
     ioctl(cPort[comportNumber], TIOCMGET, &status);
-
-    if (status & TIOCM_DSR) return (1);
-    else return (0);
+    return (status & TIOCM_DSR);
 }
 
 void rs232::enableDtr(int comportNumber) {
@@ -525,9 +516,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
 
     /*
     http://msdn.microsoft.com/en-us/library/windows/desktop/aa363145%28v=vs.85%29.aspx
-
     http://technet.microsoft.com/en-us/library/cc732236.aspx
-
     https://docs.microsoft.com/en-us/windows/desktop/api/winbase/ns-winbase-_dcb
      */
 
@@ -598,7 +587,9 @@ int rs232::sendByte(int comportNumber, uint8_t byte) {
 
     WriteFile(cPort[comportNumber], &byte, 1, (LPDWORD) ((void *) &n), NULL);
 
-    if (n < 0) return (1);
+    if (n < 0) {
+        return (-1);
+    }
 
     return (0);
 }
@@ -621,40 +612,28 @@ void rs232::closeComport(int comportNumber) {
 http://msdn.microsoft.com/en-us/library/windows/desktop/aa363258%28v=vs.85%29.aspx
  */
 
-int rs232::isDcdEnabled(int comportNumber) {
+bool rs232::isDcdEnabled(int comportNumber) {
     int status;
-
     GetCommModemStatus(cPort[comportNumber], (LPDWORD) ((void *) &status));
-
-    if (status & MS_RLSD_ON) return (1);
-    else return (0);
+    return (status & MS_RLSD_ON);
 }
 
-int rs232::isRingEnabled(int comportNumber) {
+bool rs232::isRingEnabled(int comportNumber) {
     int status;
-
     GetCommModemStatus(cPort[comportNumber], (LPDWORD) ((void *) &status));
-
-    if (status & MS_RING_ON) return (1);
-    else return (0);
+    return (status & MS_RING_ON);
 }
 
-int rs232::isCtsEnabled(int comportNumber) {
+bool rs232::isCtsEnabled(int comportNumber) {
     int status;
-
     GetCommModemStatus(cPort[comportNumber], (LPDWORD) ((void *) &status));
-
-    if (status & MS_CTS_ON) return (1);
-    else return (0);
+    return (status & MS_CTS_ON);
 }
 
-int rs232::isDsrEnabled(int comportNumber) {
+bool rs232::isDsrEnabled(int comportNumber) {
     int status;
-
     GetCommModemStatus(cPort[comportNumber], (LPDWORD) ((void *) &status));
-
-    if (status & MS_DSR_ON) return (1);
-    else return (0);
+    return (status & MS_DSR_ON);
 }
 
 void rs232::enableDtr(int comportNumber) {
