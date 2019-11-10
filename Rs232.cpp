@@ -53,8 +53,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     int error;
 
     if ((comportNumber >= RS232_PORTNR) || (comportNumber < 0)) {
-        std::cout << "illegal comport number\n";
-        return (1);
+        std::cout << "Illegal comport number.\n";
+        return -1;
     }
 
     switch (baudrate) {
@@ -119,8 +119,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         case 4000000: baudr = B4000000;
             break;
         default:
-            std::cout << "invalid baudrate\n";
-            return (1);
+            std::cout << "Invalid baudrate.\n";
+            return -2;
     }
 
     int cbits = CS8;
@@ -129,8 +129,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     int bstop = 0;
 
     if (strlen(mode) != 3) {
-        std::cout << "invalid mode \"" << mode << "\"\n";
-        return (1);
+        std::cout << "Invalid mode \"" << mode << "\".\n";
+        return -3;
     }
 
     switch (mode[0]) {
@@ -143,8 +143,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         case '5': cbits = CS5;
             break;
         default:
-            std::cout << "invalid number of data-bits '" << static_cast<char> (mode[0]) << "'\n";
-            return (1);
+            std::cout << "Invalid number of data-bits '" << static_cast<char> (mode[0]) << "'.\n";
+            return -4;
     }
 
     switch (mode[1]) {
@@ -164,8 +164,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
             ipar = INPCK;
             break;
         default:
-            std::cout << "invalid parity '" << static_cast<char> (mode[1]) << "'\n";
-            return (1);
+            std::cout << "Invalid parity '" << static_cast<char> (mode[1]) << "'.\n";
+            return -5;
     }
 
     switch (mode[2]) {
@@ -174,8 +174,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         case '2': bstop = CSTOPB;
             break;
         default:
-            std::cout << "invalid number of stop bits '" << static_cast<char> (mode[2]) << "'\n";
-            return (1);
+            std::cout << "Invalid number of stop bits '" << static_cast<char> (mode[2]) << "'.\n";
+            return -6;
     }
 
     /*
@@ -185,23 +185,23 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
 
     cPort[comportNumber] = open(COMPORTS[comportNumber], O_RDWR | O_NOCTTY | O_NDELAY);
     if (cPort[comportNumber] == -1) {
-        std::cerr << "unable to open comport ";
-        return (1);
+        std::cerr << "Unable to open comport.\n";
+        return -7;
     }
 
     /* lock access so that another process can't also use the port */
     if (flock(cPort[comportNumber], LOCK_EX | LOCK_NB) != 0) {
         close(cPort[comportNumber]);
-        std::cerr << "Another process has locked the comport.";
-        return (1);
+        std::cerr << "Another process has locked the comport.\n";
+        return -8;
     }
 
     error = tcgetattr(cPort[comportNumber], oldPortSettings + comportNumber);
     if (error == -1) {
         close(cPort[comportNumber]);
         flock(cPort[comportNumber], LOCK_UN); /* free the port so that others can use it. */
-        std::cerr << "unable to read portsettings ";
-        return (1);
+        std::cerr << "Unable to read port settings.\n";
+        return -9;
     }
     memset(&newPortSettings, 0, sizeof (newPortSettings)); /* clear the new struct */
 
@@ -223,8 +223,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         tcsetattr(cPort[comportNumber], TCSANOW, oldPortSettings + comportNumber);
         close(cPort[comportNumber]);
         flock(cPort[comportNumber], LOCK_UN); /* free the port so that others can use it. */
-        std::cerr << "unable to adjust portsettings ";
-        return (1);
+        std::cerr << "Unable to adjust port settings.\n";
+        return -10;
     }
 
     /* http://man7.org/linux/man-pages/man4/tty_ioctl.4.html */
@@ -232,8 +232,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
         tcsetattr(cPort[comportNumber], TCSANOW, oldPortSettings + comportNumber);
         flock(cPort[comportNumber], LOCK_UN); /* free the port so that others can use it. */
-        std::cerr << "unable to get portstatus";
-        return (1);
+        std::cerr << "Unable to get port status.\n";
+        return -11;
     }
 
     status |= TIOCM_DTR; /* turn on DTR */
@@ -242,11 +242,11 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     if (ioctl(cPort[comportNumber], TIOCMSET, &status) == -1) {
         tcsetattr(cPort[comportNumber], TCSANOW, oldPortSettings + comportNumber);
         flock(cPort[comportNumber], LOCK_UN); /* free the port so that others can use it. */
-        std::cerr << "unable to set portstatus";
-        return (1);
+        std::cerr << "Unable to set port status.\n";
+        return -12;
     }
 
-    return (0);
+    return 0;
 }
 
 int rs232::pollComport(int comportNumber, uint8_t* buf, size_t size) {
@@ -257,7 +257,7 @@ int rs232::pollComport(int comportNumber, uint8_t* buf, size_t size) {
         }
     }
 
-    return (n);
+    return n;
 }
 
 int rs232::sendByte(int comportNumber, const uint8_t byte) {
@@ -268,7 +268,7 @@ int rs232::sendByte(int comportNumber, const uint8_t byte) {
         }
     }
 
-    return (0);
+    return 0;
 }
 
 int rs232::sendBuf(int comportNumber, const uint8_t* buf, size_t size) {
@@ -281,21 +281,21 @@ int rs232::sendBuf(int comportNumber, const uint8_t* buf, size_t size) {
         }
     }
 
-    return (n);
+    return n;
 }
 
 void rs232::closeComport(int comportNumber) {
     int status;
 
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
-        std::cerr << "unable to get portstatus";
+        std::cerr << "Unable to get port status.\n";
     }
 
     status &= ~TIOCM_DTR; /* turn off DTR */
     status &= ~TIOCM_RTS; /* turn off RTS */
 
     if (ioctl(cPort[comportNumber], TIOCMSET, &status) == -1) {
-        std::cerr << "unable to set portstatus";
+        std::cerr << "Unable to set port status.\n";
     }
 
     tcsetattr(cPort[comportNumber], TCSANOW, oldPortSettings + comportNumber);
@@ -349,13 +349,13 @@ void rs232::enableDtr(int comportNumber) {
     int status;
 
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
-        std::cerr << "unable to get portstatus";
+        std::cerr << "Unable to get port status.\n";
     }
 
     status |= TIOCM_DTR; /* turn on DTR */
 
     if (ioctl(cPort[comportNumber], TIOCMSET, &status) == -1) {
-        std::cerr << "unable to set portstatus";
+        std::cerr << "Unable to set port status.\n";
     }
 }
 
@@ -363,13 +363,13 @@ void rs232::disableDtr(int comportNumber) {
     int status;
 
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
-        std::cerr << "unable to get portstatus";
+        std::cerr << "Unable to get port status.\n";
     }
 
     status &= ~TIOCM_DTR; /* turn off DTR */
 
     if (ioctl(cPort[comportNumber], TIOCMSET, &status) == -1) {
-        std::cerr << "unable to set portstatus";
+        std::cerr << "Unable to set port status.\n";
     }
 }
 
@@ -377,13 +377,13 @@ void rs232::enableRts(int comportNumber) {
     int status;
 
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
-        std::cerr << "unable to get portstatus";
+        std::cerr << "Unable to get port status.\n";
     }
 
     status |= TIOCM_RTS; /* turn on RTS */
 
     if (ioctl(cPort[comportNumber], TIOCMSET, &status) == -1) {
-        std::cerr << "unable to set portstatus";
+        std::cerr << "Unable to set port status.\n";
     }
 }
 
@@ -391,13 +391,13 @@ void rs232::disableRts(int comportNumber) {
     int status;
 
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
-        std::cerr << "unable to get portstatus";
+        std::cerr << "Unable to get port status.\n";
     }
 
     status &= ~TIOCM_RTS; /* turn off RTS */
 
     if (ioctl(cPort[comportNumber], TIOCMSET, &status) == -1) {
-        std::cerr << "unable to set portstatus";
+        std::cerr << "Unable to set port status.\n";
     }
 }
 
@@ -424,8 +424,8 @@ char modeStr[modeStrLen];
 
 int rs232::openComport(int comportNumber, int baudrate, const char* mode, int flowctrl) {
     if ((comportNumber >= RS232_PORTNR) || (comportNumber < 0)) {
-        std::cout << "illegal comport number\n";
-        return (1);
+        std::cout << "Illegal comport number.\n";
+        return -1;
     }
 
     switch (baudrate) {
@@ -468,13 +468,13 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         case 3000000: strncpy(modeStr, "baud=3000000", modeStrLen);
             break;
         default:
-            std::cout << "invalid baudrate\n";
-            return (1);
+            std::cout << "Invalid baudrate.\n";
+            return -2;
     }
 
     if (strnlen(mode, 4) != 3) {
-        std::cout << "invalid mode \"" << mode << "\"\n";
-        return (1);
+        std::cout << "Invalid mode \"" << mode << "\".\n";
+        return -3;
     }
 
     switch (mode[0]) {
@@ -487,8 +487,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         case '5': strncat(modeStr, " data=5", 8);
             break;
         default:
-            std::cout << "invalid number of data-bits '" << static_cast<char> (mode[0]) << "'\n";
-            return (1);
+            std::cout << "Invalid number of data-bits '" << static_cast<char> (mode[0]) << "'.\n";
+            return -4;
     }
 
     switch (mode[1]) {
@@ -502,8 +502,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         case 'o': strncat(modeStr, " parity=o", 10);
             break;
         default:
-            std::cout << "invalid parity '" << static_cast<char> (mode[1]) << "'\n";
-            return (1);
+            std::cout << "Invalid parity '" << static_cast<char> (mode[1]) << "'.\n";
+            return -5;
     }
 
     switch (mode[2]) {
@@ -512,8 +512,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         case '2': strncat(modeStr, " stop=2", 8);
             break;
         default:
-            std::cout << "invalid number of stop bits '" << static_cast<char> (mode[1]) << " '\n";
-            return (1);
+            std::cout << "Invalid number of stop bits '" << static_cast<char> (mode[1]) << "'.\n";
+            return -6;
     }
 
     if (flowctrl) {
@@ -537,8 +537,8 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
             NULL); /* no templates */
 
     if (cPort[comportNumber] == INVALID_HANDLE_VALUE) {
-        std::cout << "unable to open comport\n";
-        return (1);
+        std::cout << "Unable to open comport.\n";
+        return -7;
     }
 
     DCB portSettings;
@@ -546,9 +546,9 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     portSettings.DCBlength = sizeof (portSettings);
 
     if (!BuildCommDCBA(modeStr, &portSettings)) {
-        std::cout << "unable to set comport dcb settings\n";
+        std::cout << "Unable to set comport dcb settings.\n";
         CloseHandle(cPort[comportNumber]);
-        return (1);
+        return -8;
     }
 
     if (flowctrl) {
@@ -557,13 +557,12 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     }
 
     if (!SetCommState(cPort[comportNumber], &portSettings)) {
-        std::cout << "unable to set comport cfg settings\n";
+        std::cout << "Unable to set comport cfg settings.\n";
         CloseHandle(cPort[comportNumber]);
-        return (1);
+        return -9;
     }
 
     COMMTIMEOUTS Cptimeouts;
-
     Cptimeouts.ReadIntervalTimeout = MAXDWORD;
     Cptimeouts.ReadTotalTimeoutMultiplier = 0;
     Cptimeouts.ReadTotalTimeoutConstant = 0;
@@ -571,45 +570,37 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     Cptimeouts.WriteTotalTimeoutConstant = 0;
 
     if (!SetCommTimeouts(cPort[comportNumber], &Cptimeouts)) {
-        std::cout << "unable to set comport time-out settings\n";
+        std::cout << "Unable to set comport time-out settings.\n";
         CloseHandle(cPort[comportNumber]);
-        return (1);
+        return -10;
     }
 
-    return (0);
+    return 0;
 }
 
 int rs232::pollComport(int comportNumber, uint8_t* buf, size_t size) {
     int n;
-
     /* added the void pointer cast, otherwise gcc will complain about */
     /* "warning: dereferencing type-punned pointer will break strict aliasing rules" */
-
     ReadFile(cPort[comportNumber], buf, size, (LPDWORD) ((void *) &n), NULL);
-
-    return (n);
+    return n;
 }
 
 int rs232::sendByte(int comportNumber, uint8_t byte) {
     int n;
-
     WriteFile(cPort[comportNumber], &byte, 1, (LPDWORD) ((void *) &n), NULL);
-
     if (n < 0) {
-        return (-1);
+        return -1;
     }
-
-    return (0);
+    return 0;
 }
 
 int rs232::sendBuf(int comportNumber, const unsigned* buf, int size) {
     int n;
-
     if (WriteFile(cPort[comportNumber], buf, size, (LPDWORD) ((void *) &n), NULL)) {
-        return (n);
+        return n;
     }
-
-    return (-1);
+    return -1;
 }
 
 void rs232::closeComport(int comportNumber) {
