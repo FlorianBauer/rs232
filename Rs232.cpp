@@ -34,6 +34,8 @@
 #include <cstring>
 #include "Rs232.h"
 
+using namespace rs232;
+
 #if defined(__linux__) || defined(__FreeBSD__)   /* Linux & FreeBSD */
 
 #include <termios.h>
@@ -186,7 +188,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     http://man7.org/linux/man-pages/man3/termios.3.html
      */
 
-    cPort[comportNumber] = open(comports[comportNumber], O_RDWR | O_NOCTTY | O_NDELAY);
+    cPort[comportNumber] = open(COMPORTS[comportNumber], O_RDWR | O_NOCTTY | O_NDELAY);
     if (cPort[comportNumber] == -1) {
         std::cerr << "unable to open comport ";
         return (1);
@@ -531,7 +533,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     https://docs.microsoft.com/en-us/windows/desktop/api/winbase/ns-winbase-_dcb
      */
 
-    cPort[comportNumber] = CreateFileA(comports[comportNumber],
+    cPort[comportNumber] = CreateFileA(COMPORTS[comportNumber],
             GENERIC_READ | GENERIC_WRITE,
             0, /* no share  */
             NULL, /* no security */
@@ -684,7 +686,7 @@ void rs232::flushRxTx(int comportNumber) {
 #endif
 
 void rs232::cputs(int comportNumber, const char* text) /* sends a string to serial port */ {
-    while (*text != 0) rs232::sendByte(comportNumber, *(text++));
+    while (*text != 0) sendByte(comportNumber, *(text++));
 }
 
 /* return index in comports matching to device name or -1 if not found */
@@ -702,7 +704,7 @@ int rs232::getPortNr(const char* devname) {
     str[strLen - 1] = '\0';
 
     for (int i = 0; i < RS232_PORTNR; i++) {
-        if (!strncmp(comports[i], str, strLen)) {
+        if (!strncmp(COMPORTS[i], str, strLen)) {
             return i;
         }
     }
