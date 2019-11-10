@@ -25,11 +25,6 @@
  ***************************************************************************
  */
 
-
-/* Last revision: May 31, 2019 */
-/* Added support for hardware flow control using RTS and CTS lines */
-/* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
-
 #include <iostream>
 #include <cstring>
 #include "Rs232.h"

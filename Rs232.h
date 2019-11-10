@@ -25,11 +25,6 @@
  ***************************************************************************
  */
 
-/* Last revision: May 31, 2019 */
-
-/* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
-
-
 #ifndef RS232_H
 #define RS232_H
 
