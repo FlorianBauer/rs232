@@ -30,8 +30,8 @@
 /* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
 
 
-#ifndef rs232_INCLUDED
-#define rs232_INCLUDED
+#ifndef RS232_H
+#define RS232_H
 
 #include <cstdint>
 
@@ -144,4 +144,4 @@ namespace rs232 {
     int getPortNr(const char*);
 }
 
-#endif // rs232_INCLUDED
+#endif // RS232_H
