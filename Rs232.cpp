@@ -24,10 +24,10 @@
  *
  ***************************************************************************
  */
+#include "Rs232.h"
 
 #include <iostream>
 #include <cstring>
-#include "Rs232.h"
 
 using namespace rs232;
 
@@ -48,15 +48,12 @@ struct termios newPortSettings;
 struct termios oldPortSettings[RS232_PORTNR];
 
 int rs232::openComport(int comportNumber, int baudrate, const char* mode, int flowctrl) {
-    int baudr;
-    int status;
-    int error;
-
     if ((comportNumber >= RS232_PORTNR) || (comportNumber < 0)) {
         std::cout << "Illegal comport number.\n";
         return -1;
     }
 
+    int baudr;
     switch (baudrate) {
         case 50: baudr = B50;
             break;
@@ -196,7 +193,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         return -8;
     }
 
-    error = tcgetattr(cPort[comportNumber], oldPortSettings + comportNumber);
+    int error = tcgetattr(cPort[comportNumber], oldPortSettings + comportNumber);
     if (error == -1) {
         close(cPort[comportNumber]);
         flock(cPort[comportNumber], LOCK_UN); /* free the port so that others can use it. */
@@ -229,6 +226,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
 
     /* http://man7.org/linux/man-pages/man4/tty_ioctl.4.html */
 
+    int status;
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
         tcsetattr(cPort[comportNumber], TCSANOW, oldPortSettings + comportNumber);
         flock(cPort[comportNumber], LOCK_UN); /* free the port so that others can use it. */
