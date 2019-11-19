@@ -29,6 +29,7 @@
 #define RS232_H
 
 #include <cstdint>
+#include <cstdlib>
 
 namespace rs232 {
 
