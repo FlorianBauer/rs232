@@ -593,7 +593,7 @@ int rs232::sendByte(int comportNumber, uint8_t byte) {
     return 0;
 }
 
-int rs232::sendBuf(int comportNumber, const unsigned* buf, int size) {
+int rs232::sendBuf(int comportNumber, const uint8_t* buf, size_t size) {
     int n;
     if (WriteFile(cPort[comportNumber], buf, size, (LPDWORD) ((void *) &n), NULL)) {
         return n;
