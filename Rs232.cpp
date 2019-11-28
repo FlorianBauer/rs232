@@ -47,7 +47,7 @@ int cPort[RS232_PORTNR];
 struct termios newPortSettings;
 struct termios oldPortSettings[RS232_PORTNR];
 
-int rs232::openComport(int comportNumber, int baudrate, const char* mode, int flowctrl) {
+int rs232::openComport(int comportNumber, int baudrate, const char* mode, bool enableFlowCtrl) {
     if ((comportNumber >= RS232_PORTNR) || (comportNumber < 0)) {
         std::cout << "Illegal comport number.\n";
         return -1;
@@ -203,7 +203,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
     memset(&newPortSettings, 0, sizeof (newPortSettings)); /* clear the new struct */
 
     newPortSettings.c_cflag = cbits | cpar | bstop | CLOCAL | CREAD;
-    if (flowctrl) {
+    if (enableFlowCtrl) {
         newPortSettings.c_cflag |= CRTSCTS;
     }
     newPortSettings.c_iflag = ipar;
@@ -420,7 +420,7 @@ HANDLE cPort[RS232_PORTNR];
 constexpr size_t modeStrLen = 128;
 char modeStr[modeStrLen];
 
-int rs232::openComport(int comportNumber, int baudrate, const char* mode, int flowctrl) {
+int rs232::openComport(int comportNumber, int baudrate, const char* mode, bool enableFlowCtrl) {
     if ((comportNumber >= RS232_PORTNR) || (comportNumber < 0)) {
         std::cout << "Illegal comport number.\n";
         return -1;
@@ -514,7 +514,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
             return -6;
     }
 
-    if (flowctrl) {
+    if (enableFlowCtrl) {
         strncat(modeStr, " xon=off to=off odsr=off dtr=on rts=off", 40);
     } else {
         strncat(modeStr, " xon=off to=off odsr=off dtr=on rts=on", 39);
@@ -549,7 +549,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, int fl
         return -8;
     }
 
-    if (flowctrl) {
+    if (enableFlowCtrl) {
         portSettings.fOutxCtsFlow = TRUE;
         portSettings.fRtsControl = RTS_CONTROL_HANDSHAKE;
     }
