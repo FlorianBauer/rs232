@@ -33,6 +33,9 @@ using namespace rs232;
 
 #if defined(__linux__) || defined(__FreeBSD__)   /* Linux & FreeBSD */
 
+// Enable only if used with a virtual connection via `socat` and `PTY`.
+// #define VIRTUAL_CONNECTION
+
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -225,7 +228,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, bool e
     }
 
     /* http://man7.org/linux/man-pages/man4/tty_ioctl.4.html */
-
+#ifndef VIRTUAL_CONNECTION
     int status;
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
         tcsetattr(cPort[comportNumber], TCSANOW, oldPortSettings + comportNumber);
@@ -243,6 +246,7 @@ int rs232::openComport(int comportNumber, int baudrate, const char* mode, bool e
         std::cerr << "Unable to set port status.\n";
         return -12;
     }
+#endif
 
     return 0;
 }
@@ -283,8 +287,8 @@ int rs232::sendBuf(int comportNumber, const uint8_t* buf, size_t size) {
 }
 
 void rs232::closeComport(int comportNumber) {
+#ifndef VIRTUAL_CONNECTION
     int status;
-
     if (ioctl(cPort[comportNumber], TIOCMGET, &status) == -1) {
         std::cerr << "Unable to get port status.\n";
     }
@@ -295,7 +299,7 @@ void rs232::closeComport(int comportNumber) {
     if (ioctl(cPort[comportNumber], TIOCMSET, &status) == -1) {
         std::cerr << "Unable to set port status.\n";
     }
-
+#endif
     tcsetattr(cPort[comportNumber], TCSANOW, oldPortSettings + comportNumber);
     close(cPort[comportNumber]);
 
@@ -318,6 +322,8 @@ TIOCM_DSR       DSR (data set ready)
 
 http://man7.org/linux/man-pages/man4/tty_ioctl.4.html
  */
+
+#ifndef VIRTUAL_CONNECTION
 
 bool rs232::isDcdEnabled(int comportNumber) {
     int status;
@@ -398,6 +404,8 @@ void rs232::disableRts(int comportNumber) {
         std::cerr << "Unable to set port status.\n";
     }
 }
+
+#endif
 
 void rs232::flushRx(int comportNumber) {
     tcflush(cPort[comportNumber], TCIFLUSH);
