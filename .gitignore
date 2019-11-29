@@ -21,20 +21,21 @@ test_tx
 core
 
 # NetBeans project directories and files
-/dist/
-/private/
-/nbproject/
+dist/
+private/
+nbproject/
 
 # CMake generated directories and files
-/CMakeFiles/
-/[Tt]esting/
-/[Bb]uild/
-/[Dd]ebug/
-/[Rr]elease/
+CMakeFiles/
+[Tt]esting/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+*.cmake
 
 # Visual Studio project directories and files
-/.vs/
-/out/
+.vs/
+out/
 
 # Doxygen generated documentation files
 /doc/html/
