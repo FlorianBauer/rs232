@@ -228,7 +228,7 @@ namespace rs232 {
     void cputs(int comportNumber, const char* text);
 
     /**
-     * Checks the status of the DCD-pin.
+     * Checks the status of the DCD (data carrier detect)-pin.
      * @param comportNumber The index of the comport.
      * @return true when the the DCD line is high (active state), otherwise false.
      */
@@ -243,7 +243,7 @@ namespace rs232 {
     bool isRingEnabled(int comportNumber);
 
     /**
-     * Checks the status of the CTS-pin.
+     * Checks the status of the CTS (clear to send)-pin.
      * 
      * @param comportNumber The index of the comport.
      * @return true when the the CTS line is high (active state), otherwise false.
@@ -251,7 +251,7 @@ namespace rs232 {
     bool isCtsEnabled(int comportNumber);
 
     /**
-     * Checks the status of the DSR-pin.
+     * Checks the status of the DSR (data set ready)-pin.
      * 
      * @param comportNumber The index of the comport.
      * @return true when the the DSR line is high (active state), otherwise false.
@@ -259,21 +259,21 @@ namespace rs232 {
     bool isDsrEnabled(int comportNumber);
 
     /**
-     * Sets the DTR line high (active state).
+     * Sets the DTR (data terminal ready) line high (active state).
      * 
      * @param comportNumber The index of the comport.
      */
     void enableDtr(int comportNumber);
 
     /**
-     * Sets the DTR line low (non active state).
+     * Sets the DTR (data terminal ready) line low (non active state).
      * 
      * @param comportNumber The index of the comport.
      */
     void disableDtr(int comportNumber);
 
     /**
-     * Sets the RTS line high (active state).
+     * Sets the RTS (request to send) line high (active state).
      * Do not use this function if hardware flow control is enabled!
      * 
      * @param comportNumber The index of the comport.
@@ -281,7 +281,7 @@ namespace rs232 {
     void enableRts(int comportNumber);
 
     /**
-     * Sets the RTS line low (non active state).
+     * Sets the RTS (request to send) line low (non active state).
      * 
      * @param comportNumber The index of the comport.
      */
