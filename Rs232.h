@@ -161,20 +161,20 @@ namespace rs232 {
 #endif
 
     /// The max. number of comports.
-    static constexpr int RS232_PORTNR = sizeof(COMPORTS) / sizeof(COMPORTS[0]);
+    static constexpr unsigned MAX_COMPORTS = sizeof(COMPORTS) / sizeof(COMPORTS[0]);
 
     /**
      * Opens the comport. In case the comport is already opened (by another process), it will not 
      * open the port but raise an error instead.
      * 
-     * @param comportNumber The index of the comport. Starts with 0 (see list of #COMPORTS).
+     * @param portIdx The index of the comport (see #COMPORTS).
      * @param baudrate Expressed in baud per second i.e 115200 (see the list of possible baudrates).
      * @param mode Is a string in the form of "8N1", "7E2", etc. 8N1 means eight databits, no 
      *             parity, one stopbit. If in doubt, use 8N1 (see the list of possible modes).
      * @param enableFlowCtrl If true, hardware flow control is enabled using the RTS/CTS lines.
      * @return 0 on success, otherwise a negative value.
      */
-    int openComport(int comportNumber, int baudrate, const char* mode, bool enableFlowCtrl);
+    int openComport(unsigned portIdx, int baudrate, const char* mode, bool enableFlowCtrl);
 
     /**
      * Gets bytes (characters) from the serial port (if any). It does not block or wait, it returns 
@@ -184,129 +184,129 @@ namespace rs232 {
      * Always check the return value! The return value tells you how many bytes are actually 
      * received and present in your buffer.
      * 
-     * @param comportNumber The index of the comport. Starts with 0 (see list of #COMPORTS).
+     * @param portIdx The index of the comport (see #COMPORTS).
      * @param[out] buf Pointer to the receiving buffer.
      * @param size The size of the buffer in bytes.
      * @return The amount of received bytes (characters) into the buffer. This can be less than 
      *         size or zero.
      */
-    int pollComport(int comportNumber, uint8_t* buf, size_t size);
+    int pollComport(unsigned portIdx, uint8_t* buf, size_t size);
 
     /**
      * Sends a byte via the serial port.
      * 
-     * @param comportNumber The index of the comport. Starts with 0 (see list of #COMPORTS).
+     * @param portIdx The index of the comport. Starts with 0 (see list of #COMPORTS).
      * @param byte The byte to send.
      * @return 0 on success, otherwise a negative value.
      */
-    int sendByte(int comportNumber, const uint8_t byte);
+    int sendByte(unsigned portIdx, const uint8_t byte);
 
     /**
      * Sends multiple bytes via the serial port. This function blocks (it returns after all the
      * bytes have been processed).
      * 
-     * @param comportNumber The index of the comport. Starts with 0 (see list of #COMPORTS).
+     * @param portIdx The index of the comport (see #COMPORTS).
      * @param[in] buf Pointer to the buffer.
      * @param size The size of the buffer in bytes.
      * @return The amount of bytes sent or a negative value on error.
      */
-    int sendBuf(int comportNumber, const uint8_t* buf, size_t size);
+    int sendBuf(unsigned portIdx, const uint8_t* buf, size_t size);
 
     /**
      * Closes the serial port.
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport (see #COMPORTS).
      */
-    void closeComport(int comportNumber);
+    void closeComport(unsigned portIdx);
 
     /**
      * Sends a string via the serial port. String must be null-terminated.
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      * @param text The string to send.
      */
-    void cputs(int comportNumber, const char* text);
+    void cputs(unsigned portIdx, const char* text);
 
     /**
      * Checks the status of the DCD (data carrier detect)-pin.
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      * @return true when the the DCD line is high (active state), otherwise false.
      */
-    bool isDcdEnabled(int comportNumber);
+    bool isDcdEnabled(unsigned portIdx);
 
     /**
      * Checks the status of the RING-pin.
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      * @return true when the the RING line is high (active state), otherwise false.
      */
-    bool isRingEnabled(int comportNumber);
+    bool isRingEnabled(unsigned portIdx);
 
     /**
      * Checks the status of the CTS (clear to send)-pin.
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      * @return true when the the CTS line is high (active state), otherwise false.
      */
-    bool isCtsEnabled(int comportNumber);
+    bool isCtsEnabled(unsigned portIdx);
 
     /**
      * Checks the status of the DSR (data set ready)-pin.
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      * @return true when the the DSR line is high (active state), otherwise false.
      */
-    bool isDsrEnabled(int comportNumber);
+    bool isDsrEnabled(unsigned portIdx);
 
     /**
      * Sets the DTR (data terminal ready) line high (active state).
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      */
-    void enableDtr(int comportNumber);
+    void enableDtr(unsigned portIdx);
 
     /**
      * Sets the DTR (data terminal ready) line low (non active state).
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      */
-    void disableDtr(int comportNumber);
+    void disableDtr(unsigned portIdx);
 
     /**
      * Sets the RTS (request to send) line high (active state).
      * Do not use this function if hardware flow control is enabled!
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      */
-    void enableRts(int comportNumber);
+    void enableRts(unsigned portIdx);
 
     /**
      * Sets the RTS (request to send) line low (non active state).
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      */
-    void disableRts(int comportNumber);
+    void disableRts(unsigned portIdx);
 
     /**
      * Flushes data received but not read.
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      */
-    void flushRx(int comportNumber);
+    void flushRx(unsigned portIdx);
 
     /**
      * Flushes data written but not transmitted.
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      */
-    void flushTx(int comportNumber);
+    void flushTx(unsigned portIdx);
 
     /**
      * Flushes both data received but not read, and data written but not transmitted.
      * 
-     * @param comportNumber The index of the comport.
+     * @param portIdx The index of the comport.
      */
-    void flushRxTx(int comportNumber);
+    void flushRxTx(unsigned portIdx);
 
     /**
      * Returns the comport number based on the device name e.g. "ttyS0" or "COM1".
@@ -315,7 +315,7 @@ namespace rs232 {
      * @param devname The name of the device. E.g. "ttyS0" or "COM1".
      * @return 0 on success, otherwise a negative value.
      */
-    int getPortNr(const char* devname);
+    int getPortIdx(const char* devname);
 }
 
 #endif // RS232_H
