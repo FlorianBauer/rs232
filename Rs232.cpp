@@ -684,19 +684,20 @@ void rs232::cputs(unsigned portIdx, const char* text) /* sends a string to seria
 /* return index in comports matching to device name or -1 if not found */
 int rs232::getPortIdx(const char* devname) {
 
-    constexpr size_t strLen = 32;
-    char str[strLen];
-
 #if defined(__linux__) || defined(__FreeBSD__)   /* Linux & FreeBSD */
-    strncpy(str, "/dev/", strLen);
+    constexpr char DEV_PATH[] = "/dev/";
 #else  /* windows */
-    strncpy(str, "\\\\.\\", strLen);
+    constexpr char DEV_PATH[] = "\\\\.\\";
 #endif
-    strncat(str, devname, strLen);
-    str[strLen - 1] = '\0';
+
+    constexpr size_t len = 32;
+    char str[len];
+    strncpy(str, DEV_PATH, len);
+    strncat(str, devname, len - strlen(DEV_PATH));
+    str[len - 1] = '\0';
 
     for (unsigned i = 0; i < MAX_COMPORTS; i++) {
-        if (!strncmp(COMPORTS[i], str, strLen)) {
+        if (!strncmp(COMPORTS[i], str, len)) {
             return i;
         }
     }
