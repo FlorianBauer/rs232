@@ -31,6 +31,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <string>
+#include <vector>
 
 namespace rs232 {
 
@@ -218,6 +219,37 @@ namespace rs232 {
      * @return The amount of bytes sent or a negative value on error.
      */
     int sendBuf(unsigned portIdx, const uint8_t* buf, size_t size);
+
+    /**
+     * Sends multiple bytes via the serial port. This function blocks (it returns after all the
+     * bytes have been processed).
+     * 
+     * @param portIdx The index of the comport (see #COMPORTS).
+     * @param[in] buf Pointer to the buffer.
+     * @param size The size of the buffer in bytes.
+     * @return The amount of bytes sent or a negative value on error.
+     */
+    int sendBuf(unsigned portIdx, const char* buf, size_t size);
+
+    /**
+     * Sends multiple bytes via the serial port. This function blocks (it returns after all the
+     * bytes have been processed).
+     * 
+     * @param portIdx The index of the comport (see #COMPORTS).
+     * @param[in] buf The data to send.
+     * @return The amount of bytes sent or a negative value on error.
+     */
+    int sendBuf(unsigned portIdx, const std::vector<uint8_t>& buf);
+
+    /**
+     * Sends multiple bytes via the serial port. This function blocks (it returns after all the
+     * bytes have been processed).
+     * 
+     * @param portIdx The index of the comport (see #COMPORTS).
+     * @param[in] buf The data to send.
+     * @return The amount of bytes sent or a negative value on error.
+     */
+    int sendBuf(unsigned portIdx, const std::string& buf);
 
     /**
      * Closes the serial port.

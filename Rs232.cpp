@@ -47,8 +47,10 @@ using namespace rs232;
 // Enable only if used with a virtual connection via `socat` and `PTY`.
 // #define VIRTUAL_CONNECTION
 
-// Use a struct template to statically initialize the comports with invalid file handles (-1).
-template<size_t N> 
+/**
+ * Use a struct template to statically initialize the comports with invalid file handles (-1).
+ */
+template<size_t N>
 struct Com {
     int port[N];
 
@@ -63,7 +65,7 @@ struct termios newPortSettings;
 
 int rs232::openComport(unsigned portIdx, int baudrate, const char* mode, bool enableFlowCtrl) {
     if (portIdx >= MAX_COMPORTS) {
-        std::cout << "Illegal comport number.\n";
+        std::cout << "Illegal comport index.\n";
         return -1;
     }
 
@@ -139,7 +141,7 @@ int rs232::openComport(unsigned portIdx, int baudrate, const char* mode, bool en
     int ipar = IGNPAR;
     int bstop = 0;
 
-    if (strlen(mode) != 3) {
+    if (strnlen(mode, 4) != 3) {
         std::cout << "Invalid mode \"" << mode << "\".\n";
         return -3;
     }
@@ -294,6 +296,42 @@ int rs232::sendBuf(unsigned portIdx, const uint8_t* buf, size_t size) {
         }
     }
 
+    return n;
+}
+
+int rs232::sendBuf(unsigned portIdx, const char* buf, size_t size) {
+    int n = write(com.port[portIdx], buf, size);
+    if (n < 0) {
+        if (errno == EAGAIN) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+    return n;
+}
+
+int rs232::sendBuf(unsigned portIdx, const std::vector<uint8_t>& buf) {
+    int n = write(com.port[portIdx], buf.data(), buf.size());
+    if (n < 0) {
+        if (errno == EAGAIN) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+    return n;
+}
+
+int rs232::sendBuf(unsigned portIdx, const std::string& buf) {
+    int n = write(com.port[portIdx], buf.c_str(), buf.length());
+    if (n < 0) {
+        if (errno == EAGAIN) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
     return n;
 }
 
@@ -614,6 +652,30 @@ int rs232::sendByte(unsigned portIdx, uint8_t byte) {
 int rs232::sendBuf(unsigned portIdx, const uint8_t* buf, size_t size) {
     int n;
     if (WriteFile(comPort[portIdx], buf, size, (LPDWORD) ((void *) &n), NULL)) {
+        return n;
+    }
+    return -1;
+}
+
+int rs232::sendBuf(unsigned portIdx, const char* buf, size_t size) {
+    int n;
+    if (WriteFile(comPort[portIdx], buf, size, (LPDWORD) ((void *) &n), NULL)) {
+        return n;
+    }
+    return -1;
+}
+
+int rs232::sendBuf(unsigned portIdx, const std::vector<uint8_t>& buf) {
+    int n;
+    if (WriteFile(comPort[portIdx], buf.data(), buf.size(), (LPDWORD) ((void *) &n), NULL)) {
+        return n;
+    }
+    return -1;
+}
+
+int rs232::sendBuf(unsigned portIdx, const std::string& buf) {
+    int n;
+    if (WriteFile(comPort[portIdx], buf.c_str(), buf.length(), (LPDWORD) ((void *) &n), NULL)) {
         return n;
     }
     return -1;
