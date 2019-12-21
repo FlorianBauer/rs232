@@ -30,6 +30,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <string>
 
 namespace rs232 {
 
@@ -121,6 +122,9 @@ namespace rs232 {
         /* 37 */ "/dev/cuaU3",
     };
 
+    /// Path to the device ports. Is OS dependent e.g. Linux = `"/dev/"`, Windows = `"\\.\"`.
+    static constexpr const char DEV_PATH[] = "/dev/";
+
 #else // windows
 
     static constexpr const char* const COMPORTS[] = {
@@ -157,6 +161,9 @@ namespace rs232 {
         /* 30 */ "\\\\.\\COM31",
         /* 31 */ "\\\\.\\COM32",
     };
+
+    /// Path to the device ports. Is OS dependent e.g. Linux = `"/dev/"`, Windows = `"\\.\"`.
+    static constexpr const char DEV_PATH[] = "\\\\.\\";
 
 #endif
 
@@ -309,13 +316,14 @@ namespace rs232 {
     void flushRxTx(unsigned portIdx);
 
     /**
-     * Returns the comport number based on the device name e.g. "ttyS0" or "COM1".
-     * (Doesn't mean the device actually exists!)
+     * Returns the comport number based on the device name. 
+     *  This function does not check if device actually exists! Examples for valid device names: 
+     * "ttyS0", "/dev/ttyS1", "COM1", "\\.\COM2"
      * 
      * @param devname The name of the device. E.g. "ttyS0" or "COM1".
-     * @return 0 on success, otherwise a negative value.
+     * @return The port index on success, otherwise a negative value.
      */
-    int getPortIdx(const char* devname);
+    int getPortIdx(const std::string& devName);
 }
 
 #endif // RS232_H

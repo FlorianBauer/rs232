@@ -694,25 +694,20 @@ void rs232::cputs(unsigned portIdx, const char* text) /* sends a string to seria
 }
 
 /* return index in comports matching to device name or -1 if not found */
-int rs232::getPortIdx(const char* devname) {
+int rs232::getPortIdx(const std::string& devName) {
+    if (!devName.empty() && devName.length() < 24) {
+        std::string absDevName;
+        if (devName.compare(0, strlen(DEV_PATH), DEV_PATH) == 0) {
+            absDevName = devName;
+        } else {
+            absDevName = DEV_PATH + devName;
+        }
 
-#if defined(__linux__) || defined(__FreeBSD__)   /* Linux & FreeBSD */
-    constexpr char DEV_PATH[] = "/dev/";
-#else  /* windows */
-    constexpr char DEV_PATH[] = "\\\\.\\";
-#endif
-
-    constexpr size_t len = 32;
-    char str[len];
-    strncpy(str, DEV_PATH, len);
-    strncat(str, devname, len - strlen(DEV_PATH));
-    str[len - 1] = '\0';
-
-    for (unsigned i = 0; i < MAX_COMPORTS; i++) {
-        if (!strncmp(COMPORTS[i], str, len)) {
-            return i;
+        for (unsigned i = 0; i < MAX_COMPORTS; i++) {
+            if (absDevName.compare(COMPORTS[i]) == 0) {
+                return i;
+            }
         }
     }
-
-    return -1; /* device not found */
+    return -1;
 }
