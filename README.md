@@ -8,18 +8,18 @@ Website of the original C library: https://www.teuniz.net/RS-232/
 
 ### Compiling and Building
 
-Compiling the demo's can be done as follows:
+Compiling the demo's from the example directory can be done as follows:
 
 ```
-g++ DemoRx.cpp Rs232.cpp -std=c++11 -Wall -O2 -o test_rx
-g++ DemoTx.cpp Rs232.cpp -std=c++11 -Wall -O2 -o test_tx
+g++ -I../ DemoRx.cpp ../Rs232.cpp -std=c++11 -Wall -O2 -o test_rx
+g++ -I../ DemoTx.cpp ../Rs232.cpp -std=c++11 -Wall -O2 -o test_tx
 ```
 
 **OR** use the provided `Makefile` by entering `make`
 
 **OR** use `CMake` by entering
 ```bash
-cd /path/to/rs232
+cd /path/to/rs232/example
 mkdir build
 cd build
 cmake ..
@@ -35,8 +35,8 @@ To include this library into your project:
 
 1. Put the two files Rs232.h and Rs232.cpp in your project/source-directory.
 2. Write `#include "Rs232.h"` in your source-files that needs access to the library.
-3. Add the file rs232.c to your project settings (in order to get it compiled and linked with your 
-   program).
+3. Add the file Rs232.cpp to your project settings (in order to get it compiled and linked with
+   your program).
 
 A optional standalone documentation can be generated with `doxygen` by using the `Doxyfile` in the 
 `doc` directory.
@@ -158,3 +158,4 @@ Data-Bits          | Parity        | Stop-Bits
 `8`, `7`, `6`, `5` | `N`, `E`, `O` | `1`, `2`
 
 When in doubt, use default `8N1`.
+
