@@ -8,7 +8,7 @@ Website of the original C library: https://www.teuniz.net/RS-232/
 
 ### Compiling and Building
 
-Compiling the demo's from the example directory can be done as follows:
+Compiling the demos from the example directory can be done as follows:
 
 ```
 g++ -I../ DemoRx.cpp ../Rs232.cpp -std=c++11 -Wall -O2 -o test_rx
@@ -148,7 +148,7 @@ Linux    | Windows
 Field order:  
 
 1. `[Data-Bits]`
-2. `[Not Set/Even/O2dd-Parity]`
+2. `[Not Set/Even/Odd-Parity]`
 3. `[Stop-Bits]`
 
 Available parameters:  
