@@ -63,7 +63,11 @@ static struct Com<MAX_COMPORTS> com;
 static struct termios oldPortSettings[MAX_COMPORTS];
 struct termios newPortSettings;
 
-int rs232::openComport(unsigned portIdx, int baudrate, const char* mode, bool enableFlowCtrl) {
+int rs232::openComport(unsigned portIdx,
+        int baudrate,
+        const std::string& mode,
+        bool enableFlowCtrl = false) {
+
     if (portIdx >= MAX_COMPORTS) {
         std::cout << "Illegal comport index.\n";
         return -1;
@@ -141,7 +145,7 @@ int rs232::openComport(unsigned portIdx, int baudrate, const char* mode, bool en
     int ipar = IGNPAR;
     int bstop = 0;
 
-    if (strnlen(mode, 4) != 3) {
+    if (mode.length() != 3) {
         std::cout << "Invalid mode \"" << mode << "\".\n";
         return -3;
     }
@@ -476,7 +480,11 @@ static HANDLE comPort[MAX_COMPORTS];
 constexpr size_t modeStrLen = 128;
 char modeStr[modeStrLen];
 
-int rs232::openComport(unsigned portIdx, int baudrate, const char* mode, bool enableFlowCtrl) {
+int rs232::openComport(unsigned portIdx,
+        int baudrate,
+        const std::string& mode,
+        bool enableFlowCtrl = false) {
+
     if (portIdx >= MAX_COMPORTS) {
         std::cout << "Illegal comport number.\n";
         return -1;
@@ -526,7 +534,7 @@ int rs232::openComport(unsigned portIdx, int baudrate, const char* mode, bool en
             return -2;
     }
 
-    if (strnlen(mode, 4) != 3) {
+    if (mode.length() != 3) {
         std::cout << "Invalid mode \"" << mode << "\".\n";
         return -3;
     }
@@ -749,7 +757,8 @@ void rs232::flushRxTx(unsigned portIdx) {
 
 #endif
 
-void rs232::cputs(unsigned portIdx, const char* text) /* sends a string to serial port */ {
+/* sends a string to serial port */
+void rs232::cputs(unsigned portIdx, const char* text) {
     while (*text != 0) {
         sendByte(portIdx, *(text++));
     }

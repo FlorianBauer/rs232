@@ -182,7 +182,7 @@ namespace rs232 {
      * @param enableFlowCtrl If true, hardware flow control is enabled using the RTS/CTS lines.
      * @return 0 on success, otherwise a negative value.
      */
-    int openComport(unsigned portIdx, int baudrate, const char* mode, bool enableFlowCtrl);
+    int openComport(unsigned portIdx, int baudrate, const std::string& mode, bool enableFlowCtrl);
 
     /**
      * Gets bytes (characters) from the serial port (if any). It does not block or wait, it returns 
