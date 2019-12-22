@@ -148,7 +148,7 @@ Linux    | Windows
 Field order:  
 
 1. `[Data-Bits]`
-2. `[Not Set/Even/O2dd-Parity]`
+2. `[Not Set/Even/Odd-Parity]`
 3. `[Stop-Bits]`
 
 Available parameters:  
