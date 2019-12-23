@@ -66,7 +66,7 @@ struct termios newPortSettings;
 int rs232::openComport(unsigned portIdx,
         int baudrate,
         const std::string& mode,
-        bool enableFlowCtrl = false) {
+        bool enableFlowCtrl) {
 
     if (portIdx >= MAX_COMPORTS) {
         std::cout << "Illegal comport index.\n";
@@ -483,7 +483,7 @@ char modeStr[modeStrLen];
 int rs232::openComport(unsigned portIdx,
         int baudrate,
         const std::string& mode,
-        bool enableFlowCtrl = false) {
+        bool enableFlowCtrl) {
 
     if (portIdx >= MAX_COMPORTS) {
         std::cout << "Illegal comport number.\n";
