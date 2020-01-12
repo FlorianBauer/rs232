@@ -271,6 +271,7 @@ namespace rs232 {
 
     /**
      * Checks the status of the DCD (data carrier detect)-pin.
+     * 
      * @param portIdx The index of the comport.
      * @return true when the the DCD line is high (active state), otherwise false.
      */

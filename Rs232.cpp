@@ -375,89 +375,89 @@ TIOCM_DSR       DSR (data set ready)
 http://man7.org/linux/man-pages/man4/tty_ioctl.4.html
  */
 
-#ifndef VIRTUAL_CONNECTION
-
 bool rs232::isDcdEnabled(unsigned portIdx) {
-    int status;
+    int status = 0;
+#ifndef VIRTUAL_CONNECTION
     ioctl(com.port[portIdx], TIOCMGET, &status);
+#endif
     return (status & TIOCM_CAR);
 }
 
 bool rs232::isRingEnabled(unsigned portIdx) {
-    int status;
+    int status = 0;
+#ifndef VIRTUAL_CONNECTION
     ioctl(com.port[portIdx], TIOCMGET, &status);
+#endif
     return (status & TIOCM_RNG);
 }
 
 bool rs232::isCtsEnabled(unsigned portIdx) {
-    int status;
+    int status = 0;
+#ifndef VIRTUAL_CONNECTION
     ioctl(com.port[portIdx], TIOCMGET, &status);
+#endif
     return (status & TIOCM_CTS);
 }
 
 bool rs232::isDsrEnabled(unsigned portIdx) {
-    int status;
+    int status = 0;
+#ifndef VIRTUAL_CONNECTION
     ioctl(com.port[portIdx], TIOCMGET, &status);
+#endif
     return (status & TIOCM_DSR);
 }
 
 void rs232::enableDtr(unsigned portIdx) {
+#ifndef VIRTUAL_CONNECTION
     int status;
-
     if (ioctl(com.port[portIdx], TIOCMGET, &status) == -1) {
         std::cerr << "Unable to get port status.\n";
     }
-
     status |= TIOCM_DTR; /* turn on DTR */
-
     if (ioctl(com.port[portIdx], TIOCMSET, &status) == -1) {
         std::cerr << "Unable to set port status.\n";
     }
+#endif
 }
 
 void rs232::disableDtr(unsigned portIdx) {
+#ifndef VIRTUAL_CONNECTION
     int status;
-
     if (ioctl(com.port[portIdx], TIOCMGET, &status) == -1) {
         std::cerr << "Unable to get port status.\n";
     }
-
     status &= ~TIOCM_DTR; /* turn off DTR */
-
     if (ioctl(com.port[portIdx], TIOCMSET, &status) == -1) {
         std::cerr << "Unable to set port status.\n";
     }
+#endif
 }
 
 void rs232::enableRts(unsigned portIdx) {
+#ifndef VIRTUAL_CONNECTION
     int status;
-
     if (ioctl(com.port[portIdx], TIOCMGET, &status) == -1) {
         std::cerr << "Unable to get port status.\n";
     }
-
     status |= TIOCM_RTS; /* turn on RTS */
-
     if (ioctl(com.port[portIdx], TIOCMSET, &status) == -1) {
         std::cerr << "Unable to set port status.\n";
     }
+#endif
 }
 
 void rs232::disableRts(unsigned portIdx) {
+#ifndef VIRTUAL_CONNECTION
     int status;
-
     if (ioctl(com.port[portIdx], TIOCMGET, &status) == -1) {
         std::cerr << "Unable to get port status.\n";
     }
-
     status &= ~TIOCM_RTS; /* turn off RTS */
-
     if (ioctl(com.port[portIdx], TIOCMSET, &status) == -1) {
         std::cerr << "Unable to set port status.\n";
     }
-}
-
 #endif
+}
 
 void rs232::flushRx(unsigned portIdx) {
     tcflush(com.port[portIdx], TCIFLUSH);
